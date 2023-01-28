@@ -1,7 +1,7 @@
 <template>
   <div :class="[getTeamColor(teamColor)]" class="m-3 p-2 rounded-lg">
-    <h2>{{ teamName }}</h2>
-    <button @click="showHideParticipants()">Participants</button>
+    <h2 class="text-xl mb-2">{{ teamName }}</h2>
+    <button @click="showHideParticipants()" :class="[getTeamColor(teamColor, 200)]" class="px-2 mb-1 rounded-lg text-left">Participants</button>
     <Transition name="open">
       <div v-show="showParticipants.show" id="team-list" :class="[getTeamColor(teamColor, 200)]" class="flex flex-wrap gap-y-1 gap-x-4 overflow-hidden px-2 rounded-lg">
         <p v-for="participant in participants">
