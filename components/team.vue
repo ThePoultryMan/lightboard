@@ -1,0 +1,111 @@
+<template>
+  <div :class="[getTeamColor(teamColor)]" class="m-3 p-2 rounded-lg">
+    <h2>{{ teamName }}</h2>
+    <button @click="showHideParticipants()">Participants</button>
+    <Transition name="open">
+      <div v-show="showParticipants.show" id="team-list" :class="[getTeamColor(teamColor, 200)]" class="flex flex-wrap gap-y-1 gap-x-4 overflow-hidden px-2 rounded-lg">
+        <p v-for="participant in participants">
+          {{ participant }}
+        </p>
+      </div>
+    </Transition>
+  </div>
+</template>
+
+<script>
+import { collection, getDocs, getFirestore, query, where } from '@firebase/firestore';
+
+export default {
+  data() {
+    return {
+      showParticipants: {
+        show: false,
+        calculate: true,
+      },
+      participants: [],
+    }
+  },
+  props: {
+    teamName: String,
+    teamColor: {
+      type: String,
+      required: true,
+    },
+  },
+
+  async mounted() {
+    const database = getFirestore();
+    const q = query(collection(database, "teams"), where("teamName", "==", this.$props.teamName));
+
+    const result = await getDocs(q);
+    result.forEach(team => {
+      team.data().participants.forEach(participant => {
+        this.participants.push(participant);
+      });
+    });
+  },
+
+  methods: {
+    getTeamColor(color, amount) {
+      if (amount == 200) {
+        switch(color) {
+          case "red":
+            return "bg-red-200";
+          case "blue":
+            return "bg-blue-200";
+        }
+      }
+      switch(color) {
+        case "red":
+          return "bg-red-300";
+        case "blue":
+          return "bg-blue-300";
+      }
+    },
+    prepareCss() {
+      const element = document.getElementById("team-list");
+      const clone = element.cloneNode(true);
+
+      Object.assign(clone.style, {
+          overflow: 'visible',
+          height: 'auto',
+          maxHeight: 'none',
+          opacity: '0',
+          visibility: 'hidden',
+          display: 'block',
+      });
+
+      element.after(clone);
+      const height = clone.offsetHeight;
+
+      clone.remove();
+      document.querySelector(":root").style.setProperty("--height", height + "px");
+    },
+    showHideParticipants() {
+      if (this.showParticipants.calculate) {
+        this.prepareCss();
+        this.showParticipants.calculate = false;
+      }
+      this.showParticipants.show = !this.showParticipants.show;
+    }
+  },
+}
+</script>
+
+<style>
+:root {
+  --height: 100px;
+}
+
+.open-enter-active, .open-leave-active {
+  transition: max-height 0.35s;
+}
+
+.open-enter-from, .open-leave-to {
+  max-height: 0;
+}
+
+.open-enter-to, .open-leave-from {
+  max-height: var(--height);
+}
+</style>
