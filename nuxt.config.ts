@@ -6,6 +6,8 @@ export default defineNuxtConfig({
     "nuxt-icon",
   ],
 
+  ssr: false,
+
   vuefire: {
     config: {
       apiKey: process.env.API_KEY,

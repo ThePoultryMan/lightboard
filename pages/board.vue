@@ -13,7 +13,7 @@
 
 <script>
 import { collection, getDocs, getFirestore } from "@firebase/firestore";
-import { TeamData } from "../team-data.js"
+import { TeamData } from "~/assets/team-data.js"
 
 export default {
   data() {
