@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   modules: [
     "nuxt-vuefire",
     "@nuxtjs/tailwindcss",
+    "nuxt-icon",
   ],
 
   vuefire: {

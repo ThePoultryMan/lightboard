@@ -1,7 +1,11 @@
 <template>
   <div :class="[getTeamColor(teamColor)]" class="m-3 p-2 rounded-lg">
     <h2 class="text-xl mb-2">{{ teamName }}</h2>
-    <button @click="showHideParticipants()" :class="[getTeamColor(teamColor, 200)]" class="px-2 mb-1 rounded-lg text-left text-md">Participants</button>
+    <button @click="showHideParticipants()" :class="[getTeamColor(teamColor, 200)]" class="px-2 mb-1 rounded-lg text-left text-md">
+      <div>
+        <p>Participants <Icon id="drop-icon" class="transition-transform duration-[350ms] rotate-180" name="material-symbols:keyboard-arrow-down-rounded" /></p>
+      </div>
+    </button>
     <Transition name="open">
       <div v-show="showParticipants.show" id="team-list" :class="[getTeamColor(teamColor, 200)]" class="flex flex-wrap gap-y-1 gap-x-4 overflow-hidden px-2 rounded-lg">
         <p v-for="participant in participants">
@@ -87,6 +91,9 @@ export default {
         this.showParticipants.calculate = false;
       }
       this.showParticipants.show = !this.showParticipants.show;
+      const element = this.$el.querySelector("#drop-icon")
+      element.classList.remove(this.showParticipants.show ? "rotate-180" : "rotate-0");
+      element.classList.add(this.showParticipants.show ? "rotate-0" : "rotate-180");
     }
   },
 }
@@ -107,5 +114,9 @@ export default {
 
 .open-enter-to, .open-leave-from {
   max-height: var(--height);
+}
+
+.drop-icon {
+  transform: rotate(180);
 }
 </style>
