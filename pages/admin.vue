@@ -14,20 +14,21 @@
               {{ event.name }}
             </th>
           </tr>
-          <tr v-for="participant in team.participants">
+          <tr v-for="participant in team.participants" :id="participant">
             <td class="">{{ participant }}</td>
             <td v-for="event in events" class="">
-              <input :type="event.scoreType" class="border border-gray-800 rounded-md px-1" />
+              <input :id="participant+event" :type="event.scoreType" v-model="scores[participant][event.name]" class="border border-gray-800 rounded-md px-1" />
             </td>
           </tr>
         </table>
+        <button @click="saveScores(team)" class="bg-blue-300 rounded-md p-1">Save</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { collection, getDocs, getFirestore, query } from "@firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, query, updateDoc } from "@firebase/firestore";
 import { fetchTeamData } from "~/assets/team-data"
 import { Event } from "~/assets/event"
 
@@ -42,6 +43,7 @@ export default {
         new Event("Week 2", "number"),
         new Event("Week 3", "number"),
       ],
+      scores: {},
     }
   },
 
@@ -49,6 +51,8 @@ export default {
     const database = getFirestore();
     const q = query(collection(database, "teams"));
     this.teams = fetchTeamData(await getDocs(q));
+
+    this.scores = await this.getScores();
   },
 
   methods: {
@@ -56,7 +60,40 @@ export default {
       if (this.code == "tpoultrym!") {
         this.loggedIn = true;
       }
-    }
+    },
+    async getScores() {
+      const database = getFirestore();
+      const documentReference = doc(database, "athletes", "scores");
+      const document = await getDoc(documentReference);
+      console.log(document.data())
+      return document.data();
+    },
+    async saveScores(team) {
+      const component = this;
+      const database = getFirestore();
+      const documentReference = doc(database, "athletes", "scores");
+      team.participants.forEach(async participant => {
+        //if (documentSnapshot.data()[participant] != null) {
+          const participantRow = this.$el.querySelector(`#${participant}`);
+          let scores = Array.from(participantRow.getElementsByTagName("td"));
+          scores.shift();
+          scores = scores.map(function(element, index) {
+            return [component.events[index], element.children[0].value];
+          });
+          
+          const update = {
+            [participant]: {}
+          }
+
+          // scores[0][0]
+          scores.forEach(eventScore => {
+            update[participant][eventScore[0].name] = eventScore[1];
+          })
+
+          await updateDoc(documentReference, update);
+        //}
+      });
+    },
   },
 }
 </script>
