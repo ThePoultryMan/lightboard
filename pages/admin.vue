@@ -6,22 +6,37 @@
       <button type="submit" class="bg-blue-400 ml-3 p-1 rounded-md">Login</button>
     </form>
     <div v-else class="m-3">
-      <div v-for="team in teams">
-        <table class="w-full border-separate border-spacing-0">
+      <div v-for="team in teams" :class="['bg-' + team.color] + '-300'" class="my-3 p-1.5 rounded-lg">
+        <table class="w-full">
           <tr>
-            <th :class="'bg-' + [team.color] + '-300'" class="border-x border-t rounded-tl-lg">{{ team.name }}</th>
+            <th>{{ team.name }}</th>
             <th v-for="event in events">
               {{ event.name }}
             </th>
           </tr>
           <tr v-for="participant in team.participants" :id="participant">
-            <td class="">{{ participant }}</td>
-            <td v-for="event in events" class="">
-              <input :id="participant+event" :type="event.scoreType" v-model="scores[participant][event.name]" class="border border-gray-800 rounded-md px-1" />
+            <td>{{ participant }}</td>
+            <td v-for="event in events" class="text-center">
+              <label :for="participant + event + 'division'">Division: </label>
+              <select
+                :id="participant + event + 'division'"
+                v-if="isScoreDefined(participant, event.name)"
+                v-model="scores[participant][event.name].division"
+                class="rounded-md p-1 m-1"
+              >
+                <option selected disabled>Select an option...</option>
+                <option v-for="division in divisions">{{ division }}</option>
+              </select>
+              <input
+                v-if="isScoreDefined(participant, event.name)"
+                :id="participant+event.name"
+                :type="event.scoreType"
+                v-model="scores[participant][event.name].score" class="border border-gray-800 rounded-md px-1"
+              />
             </td>
           </tr>
         </table>
-        <button @click="saveScores(team)" class="bg-blue-300 rounded-md p-1">Save</button>
+        <button @click="saveScores(team)" :class="['bg-' + team.color] + '-200'" class="rounded-md p-1">Save</button>
       </div>
     </div>
   </div>
@@ -43,8 +58,20 @@ export default {
         new Event("Week 2", "number"),
         new Event("Week 3", "number"),
       ],
+      divisions: [
+        "Men's RX",
+        "Women's RX",
+        "Men's Scaled",
+        "Women's Scaled",
+      ],
       scores: {},
     }
+  },
+  computed: {
+    dataExists() {
+      const bool = this.scores?.coal["Week 1"].score !== undefined;
+      return bool;
+    },
   },
 
   async mounted() {
@@ -65,35 +92,25 @@ export default {
       const database = getFirestore();
       const documentReference = doc(database, "athletes", "scores");
       const document = await getDoc(documentReference);
-      console.log(document.data())
       return document.data();
     },
     async saveScores(team) {
       const component = this;
       const database = getFirestore();
       const documentReference = doc(database, "athletes", "scores");
-      team.participants.forEach(async participant => {
-        //if (documentSnapshot.data()[participant] != null) {
-          const participantRow = this.$el.querySelector(`#${participant}`);
-          let scores = Array.from(participantRow.getElementsByTagName("td"));
-          scores.shift();
-          scores = scores.map(function(element, index) {
-            return [component.events[index], element.children[0].value];
-          });
-          
-          const update = {
-            [participant]: {}
-          }
-
-          // scores[0][0]
-          scores.forEach(eventScore => {
-            update[participant][eventScore[0].name] = eventScore[1];
-          })
-
-          await updateDoc(documentReference, update);
-        //}
-      });
+      
+      updateDoc(documentReference, this.scores);
     },
+    isScoreDefined(participant, eventName) {
+      if (typeof this.scores[participant][eventName] === 'undefined') {
+        this.scores[participant][eventName] = {
+          division: "Select an option...",
+          score: 0,
+        };
+      }
+
+      return typeof this.scores[participant][eventName] !== 'undefined';
+    }
   },
 }
 </script>
