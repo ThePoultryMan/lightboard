@@ -7,7 +7,7 @@
     </form>
     <div v-else class="m-3">
       <div v-for="team in teams" :class="['bg-' + team.color] + '-300'" class="my-3 p-1.5 rounded-lg">
-        <table class="w-full">
+        <table class="w-full border-separate border-spacing-x-0">
           <tr>
             <th>{{ team.name }}</th>
             <th v-for="event in events">
@@ -15,11 +15,11 @@
             </th>
           </tr>
           <tr v-for="participant in team.participants" :id="participant">
-            <td>{{ participant }}</td>
-            <td v-for="event in events" class="text-center">
-              <label :for="participant + event + 'division'">Division: </label>
+            <td class="border border-r-0 rounded-l-md pl-2">{{ participant }}</td>
+            <td v-for="event, index in events" :class="{'border-r rounded-r-md': index == events.length - 1}" class="text-center border-y">
+              <label :for="participant + event.name + 'division'">Division: </label>
               <select
-                :id="participant + event + 'division'"
+                :id="participant + event.name + 'division'"
                 v-if="isScoreDefined(participant, event.name)"
                 v-model="scores[participant][event.name].division"
                 class="rounded-md p-1 m-1"
@@ -27,16 +27,18 @@
                 <option selected disabled>Select an option...</option>
                 <option v-for="division in divisions">{{ division }}</option>
               </select>
+              <label :for="participant + event.name" class="pl-5">Score: </label>
               <input
                 v-if="isScoreDefined(participant, event.name)"
-                :id="participant+event.name"
+                :id="participant + event.name"
                 :type="event.scoreType"
-                v-model="scores[participant][event.name].score" class="border border-gray-800 rounded-md px-1"
+                v-model="scores[participant][event.name].score"
+                class="border border-gray-800 rounded-md p-1 m-1"
               />
             </td>
           </tr>
         </table>
-        <button @click="saveScores(team)" :class="['bg-' + team.color] + '-200'" class="rounded-md p-1">Save</button>
+        <button @click="saveScores(team)" :class="['bg-' + team.color] + '-200'" class="rounded-md p-1 mt-2">Save</button>
       </div>
     </div>
   </div>
@@ -95,13 +97,15 @@ export default {
       return document.data();
     },
     async saveScores(team) {
-      const component = this;
       const database = getFirestore();
       const documentReference = doc(database, "athletes", "scores");
       
       updateDoc(documentReference, this.scores);
     },
     isScoreDefined(participant, eventName) {
+      if (typeof this.scores[participant] === 'undefined') {
+        this.scores[participant] = {};
+      }
       if (typeof this.scores[participant][eventName] === 'undefined') {
         this.scores[participant][eventName] = {
           division: "Select an option...",
@@ -109,7 +113,7 @@ export default {
         };
       }
 
-      return typeof this.scores[participant][eventName] !== 'undefined';
+      return true;
     }
   },
 }
