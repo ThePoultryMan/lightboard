@@ -1,24 +1,27 @@
 <template>
   <div class="w-full">
-    <div class="flex">
+    <div class="flex m-3">
       <!--Should be un-hardcoded for dynamic adjustment.-->
-      <div v-for="team, index in teams" :class="[getTeamColor(team.color), index == 0 ? 'rounded-l-lg ml-3' : 'rounded-r-lg mr-3']" class="flex-1 h-10 mt-3" />
+      <div v-for="team, index in teams" :class="[getTeamColor(team.color), index == 0 ? 'rounded-l-lg' : 'rounded-r-lg']" class="flex-1 h-10 mb-3" />
     </div>
     <!---->
-    <div class="md:flex md:items-start">
+    <div class="md:flex md:items-start m-3 gap-3">
       <Team v-for="team in teams" :team-name="team.name" :team-color="team.color" class="flex-1" />
     </div>
+    <!--Leader Board(s) todo: Add option to change type of leader boards displayed-->
+    <LeaderBoard :scores="scores" class="m-3" />
   </div>
 </template>
 
 <script>
-import { collection, getDocs, getFirestore } from "@firebase/firestore";
-import { TeamData } from "~/assets/team-data.js"
+import { collection, doc, getDoc, getDocs, getFirestore, query } from "@firebase/firestore";
+import { TeamData, fetchTeamData } from "~/assets/team-data.js"
 
 export default {
   data() {
     return {
-      teams: []
+      teams: [],
+      scores: {},
     };
   },
 
@@ -29,6 +32,11 @@ export default {
     teams.forEach(team => {
       this.teams.push(new TeamData(team.data().teamName, team.data().teamColor));
     });
+
+    // scores
+    const documentReference = doc(database, "athletes", "scores");
+    const document = await getDoc(documentReference);
+    this.scores = document.data();
   },
 
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <div :class="[getTeamColor(teamColor)]" class="m-3 p-2 rounded-lg">
+  <div :class="[getTeamColor(teamColor)]" class="p-2 rounded-lg">
     <h2 class="text-xl mb-2">{{ teamName }}</h2>
     <button @click="showHideParticipants()" :class="[getTeamColor(teamColor, 200)]" class="px-2 mb-1 rounded-lg text-left text-md">
       <div>
