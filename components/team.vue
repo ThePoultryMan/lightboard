@@ -7,7 +7,7 @@
       </div>
     </button>
     <Transition name="open">
-      <div v-show="showParticipants.show" id="team-list" :class="[getTeamColor(teamColor, 200)]" class="flex flex-wrap gap-y-1 gap-x-4 overflow-hidden px-2 rounded-lg">
+      <div v-show="showParticipants.show" :id="'team-list-' + teamName" :class="[getTeamColor(teamColor, 200)]" class="flex flex-wrap gap-y-1 gap-x-4 overflow-hidden px-2 rounded-lg">
         <p v-for="participant in participants">
           {{ participant }}
         </p>
@@ -67,7 +67,7 @@ export default {
       }
     },
     prepareCss() {
-      const element = document.getElementById("team-list");
+      const element = document.getElementById("team-list-" + this.teamName);
       const clone = element.cloneNode(true);
 
       Object.assign(clone.style, {
