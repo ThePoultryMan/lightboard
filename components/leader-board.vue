@@ -12,7 +12,7 @@
     <hr />
     <ol class="list-decimal list-inside mt-1">
       <li v-for="score, index in displayedScores" :set="name = Object.keys(score)[0]">
-        <span>{{ name }}: {{ score[name]["Week 1"].score }} - {{ getTeamPoints(index) }}</span>
+        <span>{{ name }}: {{ score[name][event].score }} - {{ getTeamPoints(index, score[name][event].bonus) }}</span>
       </li>
     </ol>
   </div>
@@ -47,8 +47,8 @@ function updateLeaderBoard() {
   }
 }
 
-function getTeamPoints(ranking) {
-  const points = displayedScores.length - ranking;
+function getTeamPoints(ranking, bonusPoints) {
+  const points = displayedScores.length - ranking + bonusPoints;
   return points == 1 ? "1 Team Point" : points + " Team Points";
 }
 </script>
