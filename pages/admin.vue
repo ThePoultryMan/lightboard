@@ -33,7 +33,14 @@
                 :id="participant + event.name"
                 :type="event.scoreType"
                 v-model="scores[participant][event.name].score"
-                class="border border-gray-800 rounded-md p-1 m-1"
+                class="border border-gray-800 rounded-md w-20 p-1 m-1"
+              />
+              <label :for="participant + event.name + '-bonus'" class="pl-5">Bonus Team Points: </label>
+              <input
+                :id="participant + event.name + '-bonus'"
+                type="number"
+                v-model="scores[participant][event.name].bonus"
+                class="border border-gray-800 rounded-md w-12 p-1 m-1"
               />
             </td>
           </tr>
@@ -110,6 +117,7 @@ export default {
         this.scores[participant][eventName] = {
           division: "Select an option...",
           score: 0,
+          bonus: 0,
         };
       }
 
