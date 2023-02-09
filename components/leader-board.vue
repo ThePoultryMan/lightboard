@@ -1,8 +1,7 @@
 <template>
   <div class="bg-indigo-200 rounded-lg p-2">
     <select class="mr-3 mb-2 p-1 rounded-md" v-model="division" @change="updateLeaderBoard()">
-      <option>Men's RX</option>
-      <option>Women's RX</option>
+      <option v-for="division in getDivisions()">{{ division }}</option>
     </select>
     <select class="mb-2 p-1 rounded-md" v-model="event" @change="updateLeaderBoard()">
       <option>Week 1</option>
@@ -19,6 +18,8 @@
 </template>
 
 <script setup>
+import { getDivisions } from '~~/assets/event';
+
 // This script uses the composition API rather than the Options API.
 const division = ref("Men's RX");
 const event = ref("Week 1");

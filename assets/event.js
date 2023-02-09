@@ -4,3 +4,13 @@ export class Event {
     this.scoreType = scoreType;
   }
 }
+
+export function getDivisions() {
+  return [
+    "Men's RX",
+    "Women's RX",
+    "Men's Scaled",
+    "Women's Scaled",
+    "Teens (Scaled & RX)",
+  ];
+}

@@ -54,7 +54,7 @@
 <script>
 import { collection, doc, getDoc, getDocs, getFirestore, query, updateDoc } from "@firebase/firestore";
 import { fetchTeamData } from "~/assets/team-data"
-import { Event } from "~/assets/event"
+import { Event, getDivisions } from "~/assets/event"
 
 export default {
   data() {
@@ -67,12 +67,7 @@ export default {
         new Event("Week 2", "number"),
         new Event("Week 3", "number"),
       ],
-      divisions: [
-        "Men's RX",
-        "Women's RX",
-        "Men's Scaled",
-        "Women's Scaled",
-      ],
+      divisions: getDivisions(),
       scores: {},
     }
   },
