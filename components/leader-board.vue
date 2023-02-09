@@ -1,17 +1,18 @@
 <template>
-  <div>
-    <select v-model="division" @change="updateLeaderBoard()">
+  <div class="bg-indigo-200 rounded-lg p-2">
+    <select class="mr-3 mb-2 p-1 rounded-md" v-model="division" @change="updateLeaderBoard()">
       <option>Men's RX</option>
       <option>Women's RX</option>
     </select>
-    <select v-model="event" @change="updateLeaderBoard()">
+    <select class="mb-2 p-1 rounded-md" v-model="event" @change="updateLeaderBoard()">
       <option>Week 1</option>
       <option>Week 2</option>
       <option>Week 3</option>
     </select>
-    <ol>
+    <hr />
+    <ol class="list-decimal list-inside mt-1">
       <li v-for="score, index in displayedScores" :set="name = Object.keys(score)[0]">
-        <span>{{ name }}: {{ score[name]["Week 1"].score }} - {{ displayedScores.length - index }} Team Points</span>
+        <span>{{ name }}: {{ score[name]["Week 1"].score }} - {{ getTeamPoints(index) }}</span>
       </li>
     </ol>
   </div>
@@ -44,5 +45,10 @@ function updateLeaderBoard() {
       }
     }
   }
+}
+
+function getTeamPoints(ranking) {
+  const points = displayedScores.length - ranking;
+  return points == 1 ? "1 Team Point" : points + " Team Points";
 }
 </script>
