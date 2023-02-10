@@ -1,6 +1,9 @@
 <template>
   <div :class="[getTeamColor(teamColor)]" class="p-2 rounded-lg">
-    <h2 class="text-xl mb-2">{{ teamName }}</h2>
+    <div class="flex justify-between">
+      <h2 class="text-xl mb-2">{{ teamName }}</h2>
+      <h3 class="text-right m-1">{{ "0" }}</h3>
+    </div>
     <button @click="showHideParticipants()" :class="[getTeamColor(teamColor, 200)]" class="px-2 mb-1 rounded-lg text-left text-md">
       <div>
         <p>Participants <Icon id="drop-icon" class="transition-transform duration-[350ms] rotate-180" name="material-symbols:keyboard-arrow-down-rounded" /></p>
@@ -17,7 +20,7 @@
 </template>
 
 <script>
-import { collection, getDocs, getFirestore, query, where } from '@firebase/firestore';
+import { collection, getDoc, getDocs, getFirestore, query, where } from '@firebase/firestore';
 
 export default {
   data() {

@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import { collection, doc, getDoc, getDocs, getFirestore, query } from "@firebase/firestore";
-import { TeamData, fetchTeamData } from "~/assets/team-data.js"
+import { collection, doc, getDoc, getDocs, getFirestore } from "@firebase/firestore";
+import { TeamData } from "~/assets/team-data.js"
 
 export default {
   data() {
@@ -28,8 +28,8 @@ export default {
   async mounted() {
     const database = getFirestore();
     const result = collection(database, "teams");
-    const teams = await getDocs(result);
-    teams.forEach(team => {
+    const teamsT = await getDocs(result);
+    teamsT.forEach(team => {
       this.teams.push(new TeamData(team.data().teamName, team.data().teamColor));
     });
 
