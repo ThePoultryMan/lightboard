@@ -2,7 +2,7 @@
   <div :class="[getTeamColor(teamColor)]" class="p-2 rounded-lg">
     <div class="flex justify-between">
       <h2 class="text-xl mb-2">{{ teamName }}</h2>
-      <h3 class="text-right m-1">{{ "0" }}</h3>
+      <h3 class="text-right m-1">{{ teamScores.total }}</h3>
     </div>
     <button @click="showHideParticipants()" :class="[getTeamColor(teamColor, 200)]" class="px-2 mb-1 rounded-lg text-left text-md">
       <div>
@@ -20,7 +20,9 @@
 </template>
 
 <script>
-import { collection, getDoc, getDocs, getFirestore, query, where } from '@firebase/firestore';
+import { collection, getDocs, getFirestore, query, where } from '@firebase/firestore';
+import { getDivisions } from '~~/assets/event';
+import { generateLeaderBoard, getTeamPoints } from '~~/assets/util';
 
 export default {
   data() {
@@ -30,6 +32,12 @@ export default {
         calculate: true,
       },
       participants: [],
+      teamScores: {
+        "Week 1": 0,
+        "Week 2": 0,
+        "Week 3": 0,
+        total: 0
+      }
     }
   },
   props: {
@@ -38,6 +46,9 @@ export default {
       type: String,
       required: true,
     },
+    scores: {
+      required: true,
+    }
   },
 
   async mounted() {
@@ -50,6 +61,22 @@ export default {
         this.participants.push(participant);
       });
     });
+
+    this.prepareCss();
+
+    // Team Scores
+    ["Week 1", "Week 2", "Week 3"].forEach(event => {
+      getDivisions().forEach(division => {
+        const sortedScores = generateLeaderBoard(this.$props.scores, division, event);
+        const teamPoints = getTeamPoints(sortedScores);
+        Object.entries(teamPoints).forEach(([name, score]) => {
+          if (this.participants.includes(name)) {
+            this.teamScores[event] += score;
+          }
+        });
+      });
+    });
+    this.teamScores.total = this.teamScores["Week 1"] + this.teamScores["Week 2"] + this.teamScores["Week 3"];
   },
 
   methods: {
@@ -104,7 +131,7 @@ export default {
 
 <style>
 :root {
-  --height: 100px;
+  --height: 0px;
 }
 
 .open-enter-active, .open-leave-active {

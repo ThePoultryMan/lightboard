@@ -6,7 +6,7 @@
     </div>
     <!---->
     <div class="md:flex md:items-start m-3 gap-3">
-      <Team v-for="team in teams" :team-name="team.name" :team-color="team.color" class="flex-1" />
+      <Team v-for="team in teams" :team-name="team.name" :team-color="team.color" :scores="scores" class="flex-1" />
     </div>
     <!--Leader Board(s) todo: Add option to change type of leader boards displayed-->
     <LeaderBoard :scores="scores" class="m-3" />
@@ -15,7 +15,7 @@
 
 <script>
 import { collection, doc, getDoc, getDocs, getFirestore } from "@firebase/firestore";
-import { TeamData } from "~/assets/team-data.js"
+import { TeamData } from "~~/assets/team-data.js"
 
 export default {
   data() {
