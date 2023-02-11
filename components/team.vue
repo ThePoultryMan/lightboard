@@ -16,6 +16,23 @@
         </p>
       </div>
     </Transition>
+    <div class="flex justify-evenly items-end h-[128px] w-full border-b">
+      <div :id="'Week 1-bar-' + teamName" class="flex items-center gap-3">
+        <h3>Week 1</h3>
+        <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
+        <h3 class="italic">{{ teamScores["Week 1"] }}</h3>
+      </div>
+      <div :id="'Week 2-bar-' + teamName" class="flex items-center gap-3">
+        <h3>Week 2</h3>
+        <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
+        <h3 class="italic">{{ teamScores["Week 2"] }}</h3>
+      </div>
+      <div :id="'Week 3-bar-' + teamName" class="flex items-center gap-3">
+        <h3>Week 3</h3>
+        <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
+        <h3 class="italic">{{ teamScores["Week 3"] }}</h3>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -65,7 +82,8 @@ export default {
     this.prepareCss();
 
     // Team Scores
-    ["Week 1", "Week 2", "Week 3"].forEach(event => {
+    const events = ["Week 1", "Week 2", "Week 3"];
+    events.forEach(event => {
       getDivisions().forEach(division => {
         const sortedScores = generateLeaderBoard(this.$props.scores, division, event);
         const teamPoints = getTeamPoints(sortedScores);
@@ -77,6 +95,9 @@ export default {
       });
     });
     this.teamScores.total = this.teamScores["Week 1"] + this.teamScores["Week 2"] + this.teamScores["Week 3"];
+    events.forEach(event => {
+      document.getElementById(event + '-bar-' + this.teamName).style.height = Math.max(128 * (this.teamScores[event] / this.teamScores.total), 24) + "px";
+    });
   },
 
   methods: {
@@ -87,6 +108,13 @@ export default {
             return "bg-red-200";
           case "blue":
             return "bg-blue-200";
+        }
+      } else if (amount == 400) {
+        switch(color) {
+        case "red":
+          return "bg-red-400";
+        case "blue":
+          return "bg-blue-400";
         }
       }
       switch(color) {
