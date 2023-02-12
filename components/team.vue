@@ -20,17 +20,17 @@
       <div :id="'Week 1-bar-' + teamName" class="flex items-center gap-3">
         <h3>Week 1</h3>
         <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
-        <h3 class="italic">{{ teamScores["Week 1"] }}</h3>
+        <h3 class="font-bold">{{ teamScores["Week 1"] }}</h3>
       </div>
       <div :id="'Week 2-bar-' + teamName" class="flex items-center gap-3">
         <h3>Week 2</h3>
         <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
-        <h3 class="italic">{{ teamScores["Week 2"] }}</h3>
+        <h3 class="font-bold">{{ teamScores["Week 2"] }}</h3>
       </div>
       <div :id="'Week 3-bar-' + teamName" class="flex items-center gap-3">
         <h3>Week 3</h3>
         <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
-        <h3 class="italic">{{ teamScores["Week 3"] }}</h3>
+        <h3 class="font-bold">{{ teamScores["Week 3"] }}</h3>
       </div>
     </div>
   </div>
