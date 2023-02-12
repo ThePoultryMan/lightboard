@@ -10,7 +10,7 @@
     </select>
     <hr />
     <ol class="list-decimal list-inside mt-1">
-      <li v-for="score, index in displayedScores">
+      <li v-for="score, index in displayedScores.val">
         <span>{{ score.name }}: {{ score.score }} - {{ teamPoints[score.name] }}</span>
       </li>
     </ol>
@@ -24,7 +24,7 @@ import { generateLeaderBoard, getTeamPoints } from '~~/assets/util';
 // This script uses the composition API rather than the Options API.
 const division = ref("Men's RX");
 const event = ref("Week 1");
-var displayedScores = reactive({});
+const displayedScores = reactive({ val: 0 });
 var teamPoints = reactive({});
 
 const props = defineProps({
@@ -33,7 +33,7 @@ const props = defineProps({
 
 // todo: figure out a better way of storing scores and the like, so it's easier and more performant to access.
 function updateLeaderBoard() {
-  displayedScores = generateLeaderBoard(props.scores, division.value, event.value);
-  teamPoints = getTeamPoints(displayedScores);
+  displayedScores.val = generateLeaderBoard(props.scores, division.value, event.value);
+  teamPoints = getTeamPoints(displayedScores.val);
 }
 </script>
