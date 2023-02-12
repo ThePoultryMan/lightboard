@@ -4,7 +4,7 @@
     <nav class="flex justify-between w-full">
       <div>
         <NuxtLink to="/" class="mx-3">Home</NuxtLink>
-        <NuxtLink to="/board">Board</NuxtLink>
+        <NuxtLink to="/board">Leader Board</NuxtLink>
       </div>
       <NuxtLink to="/admin">Admin</NuxtLink>
     </nav>
