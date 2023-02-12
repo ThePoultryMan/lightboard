@@ -1,5 +1,5 @@
 <template>
-  <div :class="[getTeamColor(teamColor)]" class="p-2 rounded-lg">
+  <div :class="[getTeamColor(teamColor)]" class="p-2 mb-3 rounded-lg">
     <div class="flex justify-between">
       <h2 class="text-xl mb-2">{{ teamName }}</h2>
       <h3 class="text-right m-1">{{ teamScores.total }}</h3>
