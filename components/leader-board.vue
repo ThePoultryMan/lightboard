@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+import { doc, getDoc, getFirestore } from "@firebase/firestore"
 import { getDivisions } from '~~/assets/event';
 import { generateLeaderBoard, getTeamPoints } from '~~/assets/util';
 
@@ -25,15 +26,15 @@ import { generateLeaderBoard, getTeamPoints } from '~~/assets/util';
 const division = ref("Men's RX");
 const event = ref("Week 1");
 const displayedScores = reactive({ val: 0 });
+const scoringData = reactive((await getDoc(doc(getFirestore(), "athletes/scoring-data"))).data());
 var teamPoints = reactive({});
 
 const props = defineProps({
   scores: Object,
 });
 
-// todo: figure out a better way of storing scores and the like, so it's easier and more performant to access.
 function updateLeaderBoard() {
   displayedScores.val = generateLeaderBoard(props.scores, division.value, event.value);
-  teamPoints = getTeamPoints(displayedScores.val);
+  teamPoints = getTeamPoints(displayedScores.val, scoringData[division.value]);
 }
 </script>

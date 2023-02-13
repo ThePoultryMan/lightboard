@@ -26,10 +26,10 @@ export function generateLeaderBoard(scores, division, event) {
   return sortedScores;
 }
 
-export function getTeamPoints(sortedScores) {
+export function getTeamPoints(sortedScores, scoringData) {
   const teamPoints = {};
   sortedScores.forEach((score, index) => {
-    teamPoints[score.name] = sortedScores.length - index + score.bonus;
+    teamPoints[score.name] = scoringData.initial - (index * scoringData.decrease) + score.bonus;
   });
   return teamPoints;
 }
