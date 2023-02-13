@@ -32,7 +32,7 @@
               <input
                 v-if="isScoreDefined(participant, event.name)"
                 :id="participant + event.name"
-                :type="event.scoreType"
+                :type="event.scoreType !== 'time' ? event.scoreType : 'text'"
                 v-model="scores[participant][event.name].score"
                 class="border border-gray-800 rounded-md w-20 p-1 m-1"
               />
@@ -90,7 +90,7 @@ export default {
       teams: [],
       events: [
         new Event("Week 1", "number"),
-        new Event("Week 2", "number"),
+        new Event("Week 2", "time"),
         new Event("Week 3", "number"),
       ],
       divisions: getDivisions(),
