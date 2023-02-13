@@ -6,6 +6,7 @@
       <button type="submit" class="bg-blue-400 ml-3 p-1 rounded-md">Login</button>
     </form>
     <div v-else class="m-3">
+      <button @click="saveScores()" class="bg-indigo-300 rounded-md p-2">Save Scores</button>
       <div v-for="team in teams" :class="['bg-' + team.color] + '-300'" class="my-3 p-1.5 rounded-lg">
         <table class="w-full border-separate border-spacing-x-0">
           <tr>
@@ -45,7 +46,6 @@
             </td>
           </tr>
         </table>
-        <button @click="saveScores(team)" :class="['bg-' + team.color] + '-200'" class="rounded-md p-1 mt-2">Save</button>
       </div>
     </div>
   </div>
@@ -98,7 +98,7 @@ export default {
       const document = await getDoc(documentReference);
       return document.data();
     },
-    async saveScores(team) {
+    async saveScores() {
       const database = getFirestore();
       const documentReference = doc(database, "athletes", "scores");
       
