@@ -36,6 +36,7 @@
                 v-model="scores[participant][event.name].score"
                 class="border border-gray-800 rounded-md w-20 p-1 m-1"
               />
+              <br />
               <label :for="participant + event.name + '-bonus'" class="pl-5">Bonus Team Points: </label>
               <input
                 :id="participant + event.name + '-bonus'"
