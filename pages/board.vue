@@ -18,6 +18,12 @@ import { collection, doc, getDoc, getDocs, getFirestore } from "@firebase/firest
 import { TeamData } from "~~/assets/team-data.js"
 
 export default {
+  setup() {
+    useHead({
+      title: "Leader Board - Lightboard",
+    });
+  },
+
   data() {
     return {
       teams: [],

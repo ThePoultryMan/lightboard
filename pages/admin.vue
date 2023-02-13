@@ -57,6 +57,12 @@ import { fetchTeamData } from "~/assets/team-data"
 import { Event, getDivisions } from "~/assets/event"
 
 export default {
+  setup() {
+    useHead({
+      title: "Admin - Lightboard",
+    });
+  },
+  
   data() {
     return {
       loggedIn: false,
