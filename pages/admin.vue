@@ -47,17 +47,21 @@
           </tr>
         </table>
       </div>
-      <div>
-        <table class="bg-indigo-300 rounded-lg">
+      <div class="bg-indigo-300 rounded-lg p-1.5 my-3 w-1/3">
+        <table class="w-full">
           <tr>
             <th>Name</th>
             <th>Initial</th>
             <th>Decrease</th>
           </tr>
-          <tr v-for="name in Object.keys(scoringData)">
+          <tr v-for="name in Object.keys(scoringData)" class="text-center">
             <td>{{ name }}</td>
-            <td><input type="number" v-model="scoringData[name].initial" /></td>
-            <td><input type="number" v-model="scoringData[name].decrease" /></td>
+            <td>
+              <input type="number" v-model="scoringData[name].initial" class="border border-gray-800 rounded-md w-12 p-1 m-1"/>
+            </td>
+            <td>
+              <input type="number" v-model="scoringData[name].decrease" class="border border-gray-800 rounded-md w-12 p-1 m-1" />
+            </td>
           </tr>
         </table>
       </div>
