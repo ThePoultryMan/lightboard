@@ -47,6 +47,21 @@
           </tr>
         </table>
       </div>
+      <div>
+        <table class="bg-indigo-300 rounded-lg">
+          <tr>
+            <th>Name</th>
+            <th>Initial</th>
+            <th>Decrease</th>
+          </tr>
+          <tr v-for="name in Object.keys(scoringData)">
+            <td>{{ name }}</td>
+            <td><input type="number" v-model="scoringData[name].initial" /></td>
+            <td><input type="number" v-model="scoringData[name].decrease" /></td>
+          </tr>
+        </table>
+      </div>
+      <button @click="saveScoringData()" class="bg-indigo-300 rounded-md p-2">Save Scoring Data</button>
     </div>
   </div>
 </template>
@@ -75,13 +90,8 @@ export default {
       ],
       divisions: getDivisions(),
       scores: {},
+      scoringData: {},
     }
-  },
-  computed: {
-    dataExists() {
-      const bool = this.scores?.coal["Week 1"].score !== undefined;
-      return bool;
-    },
   },
 
   async mounted() {
@@ -90,6 +100,8 @@ export default {
     this.teams = fetchTeamData(await getDocs(q));
 
     this.scores = await this.getScores();
+
+    this.scoringData = (await getDoc(doc(database, "athletes/scoring-data"))).data();
   },
 
   methods: {
@@ -100,15 +112,21 @@ export default {
     },
     async getScores() {
       const database = getFirestore();
-      const documentReference = doc(database, "athletes", "scores");
+      const documentReference = doc(database, "athletes/scores");
       const document = await getDoc(documentReference);
       return document.data();
     },
     async saveScores() {
       const database = getFirestore();
-      const documentReference = doc(database, "athletes", "scores");
+      const documentReference = doc(database, "athletes/scores");
       
       updateDoc(documentReference, this.scores);
+    },
+    async saveScoringData() {
+      const database = getFirestore();
+      const documentReference = doc(database, "athletes/scoring-data");
+      
+      updateDoc(documentReference, this.scoringData);
     },
     isScoreDefined(participant, eventName) {
       if (typeof this.scores[participant] === 'undefined') {
