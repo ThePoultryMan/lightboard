@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Nuxt",
+    "reason": "The backbone of this project, a simple framework that makes developing with Vue.js a walk in the park."
+  },
+  {
+    "name": "Vue.js",
+    "reason": "The foundation and spine of this project, used through Nuxt."
+  }
+]
