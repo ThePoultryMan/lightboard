@@ -9,7 +9,7 @@
       <Team v-for="team in teams" :team-name="team.name" :team-color="team.color" :scores="scores" class="flex-1" />
     </div>
     <!--Leader Board(s) todo: Add option to change type of leader boards displayed-->
-    <LeaderBoard :scores="scores" class="m-3" />
+    <LeaderBoard v-if="scores" :scores="scores" class="m-3" />
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       teams: [],
-      scores: {},
+      scores: undefined,
     };
   },
 

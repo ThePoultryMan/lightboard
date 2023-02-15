@@ -10,7 +10,7 @@
     </select>
     <hr />
     <ol class="list-decimal list-inside mt-1">
-      <li v-for="score, index in displayedScores.val">
+      <li v-for="score in displayedScores.val">
         <span>{{ score.name }}: {{ score.displayScore }} - {{ teamPoints[score.name] }}</span>
       </li>
     </ol>
@@ -32,6 +32,11 @@ var teamPoints = reactive({});
 const props = defineProps({
   scores: Object,
 });
+
+onMounted(() => {
+  console.log(props.scores)
+  updateLeaderBoard()
+})
 
 function updateLeaderBoard() {
   displayedScores.val = generateLeaderBoard(props.scores, division.value, event.value);
