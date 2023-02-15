@@ -34,7 +34,6 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  console.log(props.scores)
   updateLeaderBoard()
 })
 
