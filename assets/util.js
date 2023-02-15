@@ -15,7 +15,6 @@ export function generateLeaderBoard(scores, division, event) {
       filteredScores[name] = tempScore;
     }
   });
-  // Sort entries into new object.
   const sortedScores = [];
   Object.values(filteredScores).forEach((score, index) => {
     if (index > 0) {
@@ -31,9 +30,9 @@ export function generateLeaderBoard(scores, division, event) {
     }
   });
 
+  sortedScores.shift();
   if (filteredScores.reversed) {
     sortedScores.reverse();
-    sortedScores.pop();
   }
 
   return sortedScores;
