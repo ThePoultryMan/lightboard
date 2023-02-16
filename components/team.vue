@@ -19,7 +19,7 @@
         </p>
       </div>
     </Transition>
-    <div class="flex justify-evenly items-end h-[128px] w-full border-b">
+    <div class="flex justify-evenly items-end h-[128px] w-full border-b mt-5">
       <div :id="'Week 1-bar-' + teamName" class="flex items-center gap-3">
         <h3>Week 1</h3>
         <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
