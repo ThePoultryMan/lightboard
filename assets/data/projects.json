@@ -6,5 +6,13 @@
   {
     "name": "Vue.js",
     "reason": "The foundation and spine of this project, used through Nuxt."
+  },
+  {
+    "name": "TailwindCSS",
+    "reason": "Makes styling and designing this site a breeze (no pun intended)."
+  },
+  {
+    "name": "Nuxt Icon",
+    "reason": "Where all the icons in this project come from. A simple, easy solution to the complex problem of icons."
   }
 ]
