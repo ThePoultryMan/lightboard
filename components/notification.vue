@@ -19,9 +19,10 @@ const props = defineProps({
   message: String,
   content: String,
 });
+const emit = defineEmits(["close"]);
 
 function closeNotification() {
-  console.log(props.show);
+  emit("close");
 }
 </script>
 

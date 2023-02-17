@@ -73,6 +73,7 @@
         :show="savedNotification.show"
         :message="savedNotification.message + ' Saved!'"
         :content="savedNotification.message + ' have been saved successfully.'"
+        @close="savedNotification.show = false"
         class="fixed top-5 right-5"
       />
     </ClientOnly>
