@@ -69,6 +69,7 @@
         </div>
         <button @click="saveScoringData()" class="bg-indigo-300 rounded-md p-2">Save Scoring Data</button>
       </div>
+      <Notification :show="saved" message="Saved!" content="Scores have been saved!" />
     </ClientOnly>
   </div>
 </template>
@@ -89,6 +90,7 @@ const events = ref([
 const divisions = ref(getDivisions());
 var scores: Record<string, any> = reactive({});
 var scoringData: any = reactive({});
+var saved = ref(false);
 
 useHead({
   title: "Admin - Lightboard",
@@ -119,14 +121,14 @@ async function saveScores() {
   const documentReference = doc(database, "athletes/scores");
   
   updateDoc(documentReference, scores);
-  alert("Scores have been saved!");
+  saved.value = true;
 }
 async function saveScoringData() {
   const database = getFirestore();
   const documentReference = doc(database, "athletes/scoring-data");
   
   updateDoc(documentReference, scoringData);
-  alert("Scoring data has been saved!");
+  saved.value = true;
 }
 function isScoreDefined(participant: string, eventName: string) {
   if (typeof scores[participant] === 'undefined') {
