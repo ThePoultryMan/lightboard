@@ -8,7 +8,7 @@
         <h3 class="font-semibold">{{ props.message }}</h3>
         <p>{{ props.content }}</p>
       </div>
-      <div class="h-1 bg-purple-300" />
+      <div class="progress-bar h-1 bg-purple-300" />
     </div>
   </Transition>
 </template>
@@ -28,7 +28,7 @@ function closeNotification() {
 <style>
 .notification-enter-active,
 .notification-leave-active {
-  transition: transform 0.35s ease-in;
+  transition: transform 0.27s ease-in-out;
 }
 
 .notification-enter-from,
@@ -39,5 +39,19 @@ function closeNotification() {
 .notification-enter-to,
 .notification-leave-from {
   transform: translateX(0%);
+}
+
+@keyframes width-max {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.progress-bar {
+  width: 0%;
+  animation: width-max 3s linear 0.35s forwards;
 }
 </style>

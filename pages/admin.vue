@@ -130,7 +130,7 @@ async function saveScoringData() {
   
   updateDoc(documentReference, scoringData);
   saved.value = true;
-  setTimeout(() => saved.value = false, 3000);
+  setTimeout(() => saved.value = false, 3270);
 }
 function isScoreDefined(participant: string, eventName: string) {
   if (typeof scores[participant] === 'undefined') {
