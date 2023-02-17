@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     "nuxt-icon",
   ],
 
-  ssr: false,
+  ssr: true,
 
   vuefire: {
     config: {

@@ -1,8 +1,11 @@
 <template>
   <div :class="[getTeamColor(teamColor)]" class="p-2 mb-3 rounded-lg">
-    <div class="flex justify-between">
+    <div class="flex justify-between items-center">
       <h2 class="text-xl mb-2">{{ teamName }}</h2>
-      <h3 class="text-right m-1">{{ teamScores.total }}</h3>
+      <div class="text-right">
+        <h3 class="m-1 -mb-1 font-semibold text-lg">{{ teamScores.total }}</h3>
+        <p class="text-sm mr-1">Team Points</p>
+      </div>
     </div>
     <button @click="showHideParticipants()" :class="[getTeamColor(teamColor, 200)]" class="px-2 mb-1 rounded-lg text-left text-md">
       <div>
@@ -16,7 +19,7 @@
         </p>
       </div>
     </Transition>
-    <div class="flex justify-evenly items-end h-[128px] w-full border-b">
+    <div class="flex justify-evenly items-end h-[128px] w-full border-b mt-5">
       <div :id="'Week 1-bar-' + teamName" class="flex items-center gap-3">
         <h3>Week 1</h3>
         <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />

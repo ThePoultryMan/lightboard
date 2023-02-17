@@ -11,7 +11,7 @@
     <hr />
     <ol class="list-decimal list-inside mt-1">
       <li v-for="score in displayedScores.val">
-        <span>{{ score.name }}: {{ score.displayScore }} - {{ teamPoints[score.name] }}</span>
+        <span>{{ score.name }}: {{ score.displayScore }} <span class="mx-3">-</span> {{ teamPoints[score.name] }} Team Points</span>
       </li>
     </ol>
   </div>

@@ -35,7 +35,9 @@ export function generateLeaderBoard(scores, division, event) {
     sortedScores.reverse();
   }
 
-  return sortedScores;
+  // todo: fix duplicate scores existing at all. Rather than using this fix.
+  const uniqueSortedScores = [...new Set(sortedScores)];
+  return uniqueSortedScores;
 }
 
 export function getTeamPoints(sortedScores, scoringData) {
