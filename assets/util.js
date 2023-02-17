@@ -43,7 +43,11 @@ export function generateLeaderBoard(scores, division, event) {
 export function getTeamPoints(sortedScores, scoringData) {
   const teamPoints = {};
   sortedScores.forEach((score, index) => {
-    teamPoints[score.name] = scoringData.initial - (index * scoringData.decrease) + score.bonus;
+    if (score.score !== 0) {
+      teamPoints[score.name] = scoringData.initial - (index * scoringData.decrease) + score.bonus;
+    } else {
+      teamPoints[score.name] = 0;
+    }
   });
   return teamPoints;
 }
