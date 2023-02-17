@@ -69,7 +69,7 @@
         </div>
         <button @click="saveScoringData()" class="bg-indigo-300 rounded-md p-2">Save Scoring Data</button>
       </div>
-      <Notification :show="saved" message="Saved!" content="Scores have been saved!" />
+      <Notification :show="saved" message="Saved!" content="Scores have been saved!" class="fixed top-5 right-5" />
     </ClientOnly>
   </div>
 </template>
@@ -122,6 +122,7 @@ async function saveScores() {
   
   updateDoc(documentReference, scores);
   saved.value = true;
+  setTimeout(() => saved.value = false, 3000);
 }
 async function saveScoringData() {
   const database = getFirestore();
@@ -129,6 +130,7 @@ async function saveScoringData() {
   
   updateDoc(documentReference, scoringData);
   saved.value = true;
+  setTimeout(() => saved.value = false, 3000);
 }
 function isScoreDefined(participant: string, eventName: string) {
   if (typeof scores[participant] === 'undefined') {
