@@ -9,55 +9,46 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { collection, doc, getDoc, getDocs, getFirestore } from "@firebase/firestore";
-import { TeamData } from "~~/assets/team-data.js"
+import { TeamData } from "~~/assets/team-data";
 
-export default {
-  setup() {
-    useHead({
-      title: "Leader Board - Lightboard",
-    });
-  },
+const teams: any = ref([]);
+const scores = ref({});
 
-  data() {
-    return {
-      teams: [],
-      scores: undefined,
-    };
-  },
+useHead({
+  title: "Leader Board - Lightboard",
+});
 
-  async mounted() {
-    const database = getFirestore();
-    const result = collection(database, "teams");
-    const teamsT = await getDocs(result);
-    teamsT.forEach(team => {
-      this.teams.push(new TeamData(team.data().teamName, team.data().teamColor));
-    });
+onMounted(async () => {
+  const database = getFirestore();
+  const result = collection(database, "teams");
+  const teamsT = await getDocs(result);
+  teamsT.forEach(team => {
+    teams.value.push(new TeamData(team.data().teamName, team.data().teamColor));
+});
 
-    // scores
-    const documentReference = doc(database, "athletes", "scores");
-    const fDocument = await getDoc(documentReference);
-    this.scores = fDocument.data();
-  },
+  // scores
+  const documentReference = doc(database, "athletes", "scores");
+  const fDocument = await getDoc(documentReference);
+  const tempScores = fDocument.data();
+  scores.value = tempScores ? tempScores : {};
+});
 
-  methods: {
-    getTeamColor(color, amount) {
-      if (amount == 200) {
-        switch(color) {
-          case "red":
-            return "bg-red-200";
-          case "blue":
-            return "bg-blue-200";
-        }
-      }
-      switch(color) {
-        case "red":
-          return "bg-red-300";
-        case "blue":
-          return "bg-blue-300";
-      }
-    },
+function getTeamColor(color: string, amount: number) {
+  if (amount == 200) {
+    switch(color) {
+      case "red":
+        return "bg-red-200";
+      case "blue":
+        return "bg-blue-200";
+    }
+  }
+  switch(color) {
+    case "red":
+      return "bg-red-300";
+    case "blue":
+      return "bg-blue-300";
   }
 }
 </script>
