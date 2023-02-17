@@ -1,9 +1,5 @@
 <template>
   <div class="w-full">
-    <div class="flex m-3">
-      <!--Should be un-hardcoded for dynamic adjustment.-->
-      <div v-for="team, index in teams" :class="[getTeamColor(team.color), index == 0 ? 'rounded-l-lg' : 'rounded-r-lg']" class="flex-1 h-10 mb-3" />
-    </div>
     <!---->
     <div class="md:flex md:items-start m-3 gap-3">
       <Team v-for="team in teams" :team-name="team.name" :team-color="team.color" :scores="scores" class="flex-1" />
@@ -41,8 +37,8 @@ export default {
 
     // scores
     const documentReference = doc(database, "athletes", "scores");
-    const document = await getDoc(documentReference);
-    this.scores = document.data();
+    const fDocument = await getDoc(documentReference);
+    this.scores = fDocument.data();
   },
 
   methods: {
