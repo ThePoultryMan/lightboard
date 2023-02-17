@@ -69,7 +69,12 @@
         </div>
         <button @click="saveScoringData()" class="bg-indigo-300 rounded-md p-2">Save Scoring Data</button>
       </div>
-      <Notification :show="saved" message="Saved!" content="Scores have been saved!" class="fixed top-5 right-5" />
+      <Notification
+        :show="savedNotification.show"
+        :message="savedNotification.message + ' Saved!'"
+        :content="savedNotification.message + ' have been saved successfully.'"
+        class="fixed top-5 right-5"
+      />
     </ClientOnly>
   </div>
 </template>
@@ -90,7 +95,10 @@ const events = ref([
 const divisions = ref(getDivisions());
 var scores: Record<string, any> = reactive({});
 var scoringData: any = reactive({});
-var saved = ref(false);
+var savedNotification = ref({
+  show: false,
+  message: "Scores",
+});
 
 useHead({
   title: "Admin - Lightboard",
@@ -121,16 +129,18 @@ async function saveScores() {
   const documentReference = doc(database, "athletes/scores");
   
   updateDoc(documentReference, scores);
-  saved.value = true;
-  setTimeout(() => saved.value = false, 3000);
+  savedNotification.value.show = true;
+  savedNotification.value.message = "Scores"
+  setTimeout(() => savedNotification.value.show = false, 3270);
 }
 async function saveScoringData() {
   const database = getFirestore();
   const documentReference = doc(database, "athletes/scoring-data");
   
   updateDoc(documentReference, scoringData);
-  saved.value = true;
-  setTimeout(() => saved.value = false, 3270);
+  savedNotification.value.show = true;
+  savedNotification.value.message = "Scoring Data";
+  setTimeout(() => savedNotification.value.show = false, 3270);
 }
 function isScoreDefined(participant: string, eventName: string) {
   if (typeof scores[participant] === 'undefined') {
