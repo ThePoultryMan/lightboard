@@ -4,9 +4,9 @@
     <nav class="flex justify-between w-full">
       <div>
         <NuxtLink to="/" class="mx-3">Home</NuxtLink>
-        <NuxtLink to="/board" class="mx-3">Leader Board</NuxtLink>
+        <NuxtLink to="/board/" class="mx-3">Leader Board</NuxtLink>
       </div>
-      <NuxtLink to="/admin" class="mx-3">Admin</NuxtLink>
+      <NuxtLink to="/admin/" class="mx-3">Admin</NuxtLink>
     </nav>
   </header>
 </template>
