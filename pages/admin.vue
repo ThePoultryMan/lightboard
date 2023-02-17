@@ -73,82 +73,70 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { collection, doc, getDoc, getDocs, getFirestore, query, updateDoc } from "@firebase/firestore";
-import { fetchTeamData } from "~/assets/team-data"
+import { fetchTeamData } from "~~/assets/team-data.js"
 import { Event, getDivisions } from "~/assets/event"
 
-export default {
-  setup() {
-    useHead({
-      title: "Admin - Lightboard",
-    });
-  },
+const loggedIn = ref(false);
+const code = ref("");
+const teams: any = ref([]);
+const events = ref([
+  new Event("Week 1", "number"),
+  new Event("Week 2", "time"),
+  new Event("Week 3", "number"),
+]);
+const divisions = ref(getDivisions());
+var scores: Record<string, any> = reactive({});
+var scoringData: any = reactive({});
+
+useHead({
+  title: "Admin - Lightboard",
+});
+
+onMounted(async () => {
+  const database = getFirestore();
+  const q = query(collection(database, "teams"));
+  teams.value = fetchTeamData(await getDocs(q));
+  const tempScores = await getScores();
+  scores = tempScores ? tempScores : {};
+  scoringData = (await getDoc(doc(database, "athletes/scoring-data"))).data();
+})
+
+function attemptLogin() {
+  if (code.value === "tpoultrym!") {
+    loggedIn.value = true; 
+  }
+}
+async function getScores() {
+  const database = getFirestore();
+  const documentReference = doc(database, "athletes/scores");
+  const document = await getDoc(documentReference);
+  return document.data();
+}
+async function saveScores() {
+  const database = getFirestore();
+  const documentReference = doc(database, "athletes/scores");
   
-  data() {
-    return {
-      loggedIn: false,
-      code: "",
-      teams: [],
-      events: [
-        new Event("Week 1", "number"),
-        new Event("Week 2", "time"),
-        new Event("Week 3", "number"),
-      ],
-      divisions: getDivisions(),
-      scores: {},
-      scoringData: {},
-    }
-  },
-
-  async mounted() {
-    const database = getFirestore();
-    const q = query(collection(database, "teams"));
-    this.teams = fetchTeamData(await getDocs(q));
-
-    this.scores = await this.getScores();
-
-    this.scoringData = (await getDoc(doc(database, "athletes/scoring-data"))).data();
-  },
-
-  methods: {
-    attemptLogin() {
-      if (this.code == "tpoultrym!") {
-        this.loggedIn = true;
-      }
-    },
-    async getScores() {
-      const database = getFirestore();
-      const documentReference = doc(database, "athletes/scores");
-      const document = await getDoc(documentReference);
-      return document.data();
-    },
-    async saveScores() {
-      const database = getFirestore();
-      const documentReference = doc(database, "athletes/scores");
-      
-      updateDoc(documentReference, this.scores);
-    },
-    async saveScoringData() {
-      const database = getFirestore();
-      const documentReference = doc(database, "athletes/scoring-data");
-      
-      updateDoc(documentReference, this.scoringData);
-    },
-    isScoreDefined(participant, eventName) {
-      if (typeof this.scores[participant] === 'undefined') {
-        this.scores[participant] = {};
-      }
-      if (typeof this.scores[participant][eventName] === 'undefined') {
-        this.scores[participant][eventName] = {
-          division: "Select an option...",
-          score: 0,
-          bonus: 0,
-        };
-      }
-
-      return true;
-    }
-  },
+  updateDoc(documentReference, scores);
+}
+async function saveScoringData() {
+  const database = getFirestore();
+  const documentReference = doc(database, "athletes/scoring-data");
+  
+  updateDoc(documentReference, scoringData);
+}
+function isScoreDefined(participant: string, eventName: string) {
+  if (typeof scores[participant] === 'undefined') {
+    scores[participant] = {};
+  }
+  if (typeof scores[participant][eventName] === 'undefined') {
+    scores[participant][eventName] = {
+      division: "Select an option...",
+      score: 0,
+      bonus: 0,
+    };
+  }
+  return true;
 }
 </script>
