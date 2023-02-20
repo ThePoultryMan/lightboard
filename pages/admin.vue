@@ -45,6 +45,9 @@
                   v-model="scores[participant][event.name].bonus"
                   class="border border-gray-800 rounded-md w-12 p-1 m-1"
                 />
+                <br />
+                <label :for="participant + event.name + '-dropped'">Drop Score: </label>
+                <input :id="participant + event.name + '-dropped'" type="checkbox" v-model="scores[participant][event.name].dropped" class="m-1" />
               </td>
             </tr>
           </table>
@@ -152,6 +155,7 @@ function isScoreDefined(participant: string, eventName: string) {
       division: "Select an option...",
       score: 0,
       bonus: 0,
+      dropped: false,
     };
   }
   return true;
