@@ -1,11 +1,13 @@
 <template>
   <div class="w-full">
-    <!---->
-    <div class="md:flex md:items-start m-3 gap-3">
-      <Team v-for="team in teams" :team-name="team.name" :team-color="team.color" :scores="scores" class="flex-1" />
+    <div v-if="Object.keys(props.scores).length !== 0">
+      <div class="md:flex md:items-start m-3 gap-3">
+        <Team v-for="team in teams" :team-name="team.name" :team-color="team.color" :scores="props.scores" class="flex-1" />
+      </div>
+      <!--Leader Board(s) todo: Add option to change type of leader boards displayed-->
+      <LeaderBoard :scores="props.scores" class="m-3" />
     </div>
-    <!--Leader Board(s) todo: Add option to change type of leader boards displayed-->
-    <LeaderBoard v-if="Object.keys(scores).length !== 0" :scores="scores" class="m-3" />
+    <Icon v-else name="line-md:loading-twotone-loop" class="absolute top-1/2 left-1/2 w-28 h-28 -translate-xy-1/2 text-indigo-900" />
   </div>
 </template>
 
@@ -13,8 +15,14 @@
 import { collection, doc, getDoc, getDocs, getFirestore } from "@firebase/firestore";
 import { TeamData } from "~~/assets/team-data";
 
+const props = defineProps({
+  scores: {
+    type: Object,
+    required: true,
+  },
+});
+
 const teams: any = ref([]);
-const scores = ref({});
 
 useHead({
   title: "Leader Board - Lightboard",
@@ -26,29 +34,6 @@ onMounted(async () => {
   const teamsT = await getDocs(result);
   teamsT.forEach(team => {
     teams.value.push(new TeamData(team.data().teamName, team.data().teamColor));
+  });
 });
-
-  // scores
-  const documentReference = doc(database, "athletes", "scores");
-  const fDocument = await getDoc(documentReference);
-  const tempScores = fDocument.data();
-  scores.value = tempScores ? tempScores : {};
-});
-
-function getTeamColor(color: string, amount: number) {
-  if (amount == 200) {
-    switch(color) {
-      case "red":
-        return "bg-red-200";
-      case "blue":
-        return "bg-blue-200";
-    }
-  }
-  switch(color) {
-    case "red":
-      return "bg-red-300";
-    case "blue":
-      return "bg-blue-300";
-  }
-}
 </script>
