@@ -7,6 +7,9 @@ export default defineNuxtConfig({
   ],
 
   ssr: true,
+  css: [
+    "~~/css/global.css"
+  ],
 
   vuefire: {
     config: {

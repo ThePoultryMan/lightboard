@@ -1,0 +1,7 @@
+@tailwind utilities;
+
+@layer utilities {
+  .translate-1\/2 {
+    @apply -translate-x-1/2 -translate-y-1/2;
+  }
+}
