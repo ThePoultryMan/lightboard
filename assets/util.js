@@ -9,6 +9,11 @@ export function generateLeaderBoard(scores, division, event) {
         division: score[event].division,
         bonus: score[event].bonus,
         displayScore: score[event].score,
+        dropped: (() => {
+          const dropped = score[event].dropped;
+          if (dropped) return dropped;
+          else return false;
+        }),
       };
 
       filteredScores.reversed = typeof score[event].score === "string";
@@ -43,7 +48,7 @@ export function generateLeaderBoard(scores, division, event) {
 export function getTeamPoints(sortedScores, scoringData) {
   const teamPoints = {};
   sortedScores.forEach((score, index) => {
-    if (score.score !== 0) {
+    if (score.score !== 0 && !score.dropped()) {
       teamPoints[score.name] = scoringData.initial - (index * scoringData.decrease) + score.bonus;
     } else {
       teamPoints[score.name] = 0;
