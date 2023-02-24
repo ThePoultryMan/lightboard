@@ -93,7 +93,8 @@ const code = ref("");
 const teams: any = ref([]);
 const events = ref([
   new Event("Week 1", "number"),
-  new Event("Week 2", "time"),
+  new Event("Week 2A", "number"),
+  new Event("Week 2B", "number"),
   new Event("Week 3", "number"),
 ]);
 const divisions = ref(getDivisions());

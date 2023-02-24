@@ -25,10 +25,15 @@
         <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
         <h3 class="font-bold">{{ teamScores["Week 1"] }}</h3>
       </div>
-      <div :id="'Week 2-bar-' + teamName" class="flex items-center gap-3">
-        <h3>Week 2</h3>
+      <div :id="'Week 2A-bar-' + teamName" class="flex items-center gap-3">
+        <h3>Week 2A</h3>
         <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
-        <h3 class="font-bold">{{ teamScores["Week 2"] }}</h3>
+        <h3 class="font-bold">{{ teamScores["Week 2A"] }}</h3>
+      </div>
+      <div :id="'Week 2B-bar-' + teamName" class="flex items-center gap-3">
+        <h3>Week 2B</h3>
+        <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
+        <h3 class="font-bold">{{ teamScores["Week 2B"] }}</h3>
       </div>
       <div :id="'Week 3-bar-' + teamName" class="flex items-center gap-3">
         <h3>Week 3</h3>
@@ -43,6 +48,7 @@
 import { collection, doc, getDoc, getDocs, getFirestore, query, where } from '@firebase/firestore';
 import { getDivisions } from '~~/assets/event';
 import { generateLeaderBoard, getTeamPoints } from '~~/assets/util';
+import getEvents from "~~/assets/object-util";
 
 export default {
   data() {
@@ -54,7 +60,8 @@ export default {
       participants: [],
       teamScores: {
         "Week 1": 0,
-        "Week 2": 0,
+        "Week 2A": 0,
+        "Week 2B": 0,
         "Week 3": 0,
         total: 0
       }
@@ -86,7 +93,7 @@ export default {
 
     // Team Scores
     const scoringData = (await getDoc(doc(database, "athletes/scoring-data"))).data();
-    const events = ["Week 1", "Week 2", "Week 3"];
+    const events = getEvents();
     events.forEach(event => {
       getDivisions().forEach(division => {
         const sortedScores = generateLeaderBoard(this.$props.scores, division, event);
@@ -97,8 +104,8 @@ export default {
           }
         });
       });
+      this.teamScores.total += this.teamScores[event];
     });
-    this.teamScores.total = this.teamScores["Week 1"] + this.teamScores["Week 2"] + this.teamScores["Week 3"];
     events.forEach(event => {
       document.getElementById(event + '-bar-' + this.teamName).style.height = Math.max(128 * (this.teamScores[event] / this.teamScores.total), 24) + "px";
     });

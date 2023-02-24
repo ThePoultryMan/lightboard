@@ -4,9 +4,7 @@
       <option v-for="division in getDivisions()">{{ division }}</option>
     </select>
     <select class="mb-2 p-1 rounded-md" v-model="event" @change="updateLeaderBoard()">
-      <option>Week 1</option>
-      <option>Week 2</option>
-      <option>Week 3</option>
+      <option v-for="event in getEvents()">{{ event }}</option>
     </select>
     <hr />
     <ol class="list-decimal list-inside mt-1">
@@ -21,6 +19,7 @@
 import { doc, getDoc, getFirestore } from "@firebase/firestore"
 import { getDivisions } from '~~/assets/event';
 import { generateLeaderBoard, getTeamPoints } from '~~/assets/util';
+import getEvents from "~~/assets/object-util";
 
 // This script uses the composition API rather than the Options API.
 const division = ref("Men's RX");

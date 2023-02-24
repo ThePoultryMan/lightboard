@@ -26,7 +26,7 @@ onMounted(async () => {
   const teamsT = await getDocs(result);
   teamsT.forEach(team => {
     teams.value.push(new TeamData(team.data().teamName, team.data().teamColor));
-});
+  });
 
   // scores
   const documentReference = doc(database, "athletes", "scores");
@@ -34,21 +34,4 @@ onMounted(async () => {
   const tempScores = fDocument.data();
   scores.value = tempScores ? tempScores : {};
 });
-
-function getTeamColor(color: string, amount: number) {
-  if (amount == 200) {
-    switch(color) {
-      case "red":
-        return "bg-red-200";
-      case "blue":
-        return "bg-blue-200";
-    }
-  }
-  switch(color) {
-    case "red":
-      return "bg-red-300";
-    case "blue":
-      return "bg-blue-300";
-  }
-}
 </script>

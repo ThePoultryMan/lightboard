@@ -3,6 +3,7 @@ export function generateLeaderBoard(scores, division, event) {
   const filteredScores = {};
   Object.entries(scores).forEach(([name, score]) => {
     if (score[event].division == division) {
+      console.log("j", name)
       const tempScore = {
         name: name,
         score: prepareScore(score[event].score),
