@@ -45,9 +45,7 @@
 </template>
 
 <script>
-import { collection, doc, getDoc, getDocs, getFirestore, query, where } from '@firebase/firestore';
-import { getDivisions } from '~~/assets/event';
-import { generateLeaderBoard, getTeamPoints } from '~~/assets/util';
+import { collection, getDocs, getFirestore, query, where } from '@firebase/firestore';
 import getEvents from "~~/assets/object-util";
 
 export default {
@@ -75,6 +73,10 @@ export default {
     },
     scores: {
       required: true,
+    },
+    teamPoints: {
+      type: Object,
+      required: true,
     }
   },
 
@@ -92,17 +94,9 @@ export default {
     this.prepareCss();
 
     // Team Scores
-    const scoringData = (await getDoc(doc(database, "athletes/scoring-data"))).data();
     const events = getEvents();
-    events.forEach(event => {
-      getDivisions().forEach(division => {
-        const sortedScores = generateLeaderBoard(this.$props.scores, division, event);
-        const teamPoints = getTeamPoints(sortedScores, scoringData[division]);
-        Object.entries(teamPoints).forEach(([name, score]) => {
-          if (this.participants.includes(name)) {
-            this.teamScores[event] += score;
-          }
-        });
+      events.forEach(event => {Object.entries(this.$props.teamPoints[event]).forEach(([participant, teamPoints]) => {
+        if (this.participants.includes(participant)) this.teamScores[event] += teamPoints;
       });
       this.teamScores.total += this.teamScores[event];
     });

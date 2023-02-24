@@ -9,7 +9,11 @@
     <hr />
     <ol class="list-decimal list-inside mt-1">
       <li v-for="score in displayedScores.value">
-        <span>{{ score.name }}: {{ score.displayScore }} <span class="mx-3">-</span> {{ teamPoints[score.name] }} Team Points {{ getBonusPointDisplay(score.bonus) }} </span>
+        <span>
+          {{ score.name }}: {{ score.displayScore }}
+          <span class="mx-3">-</span>
+          {{ props.teamPoints[event][score.name] }} Team Points {{ getBonusPointDisplay(score.bonus) }}
+        </span>
       </li>
     </ol>
   </div>
@@ -18,7 +22,7 @@
 <script setup lang="ts">
 import { doc, getDoc, getFirestore } from "@firebase/firestore"
 import { getDivisions } from '~~/assets/event';
-import { generateLeaderBoard, getTeamPoints } from '~~/assets/util';
+import { generateLeaderBoard } from '~~/assets/util';
 import getEvents from "~~/assets/object-util";
 
 // This script uses the composition API rather than the Options API.
@@ -26,19 +30,21 @@ const division = ref("Men's RX");
 const event = ref("Week 1");
 const displayedScores: any = reactive({ value: {} });
 const scoringData = reactive((await getDoc(doc(getFirestore(), "athletes/scoring-data"))).data()!);
-var teamPoints: any = reactive({});
 
 const props = defineProps({
   scores: Object,
+  teamPoints: {
+    type: Object,
+    required: true,
+  },
 });
 
 onMounted(() => {
-  updateLeaderBoard()
+  updateLeaderBoard();
 })
 
 function updateLeaderBoard() {
   displayedScores.value = generateLeaderBoard(props.scores, division.value, event.value);
-  teamPoints = getTeamPoints(displayedScores.value, scoringData[division.value]);
 }
 
 function getBonusPointDisplay(bonusPoints: number): string {
