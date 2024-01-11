@@ -5,9 +5,9 @@
   let points = 0;
 </script>
 
-<div class="bg-blue-300 p-2 mb-3 rounded-lg" class:flex-1={flexOne}>
+<div class="bg-blue-300 p-3 mb-3 rounded-lg" class:flex-1={flexOne}>
   <div class="flex justify-between">
-    <span>{name}</span>
+    <span class="text-xl">{name}</span>
     <div class="text-right">
       <p class="text-lg font-semibold">{points}</p>
       <p class="text-sm">Team Points</p>
