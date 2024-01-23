@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
+
+import type { Team } from "./types";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD0_LsObqQ_S0cgpiaAbprJtILOjPiiM4c",
@@ -12,5 +14,20 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+export let event: string;
 
 const firestore = getFirestore(app);
+
+export function setUp(evt: string) {
+    event = evt;
+}
+
+export async function getAllTeams() {
+    const teamQuery = await getDocs(collection(firestore, "events", event, "teams"));
+    const teams: Team[] = [];
+    teamQuery.forEach((document) => {
+        teams.push(document.data() as Team);
+    });
+
+    return teams;
+}
