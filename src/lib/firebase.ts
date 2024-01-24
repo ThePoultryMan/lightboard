@@ -22,6 +22,12 @@ export function setUp(evt: string) {
     event = evt;
 }
 
+export function isSetup() {
+    if (!event) {
+        return false;
+    }
+}
+
 export async function getAllTeams() {
     const teamQuery = await getDocs(collection(firestore, "events", event, "teams"));
     const teams: Team[] = [];
