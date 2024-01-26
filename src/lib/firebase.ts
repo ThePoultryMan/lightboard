@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
 
-import type { Team } from "./types";
+import type { EventData, Team } from "./types";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD0_LsObqQ_S0cgpiaAbprJtILOjPiiM4c",
@@ -26,6 +26,12 @@ export function isSetup() {
     if (!event) {
         return false;
     }
+}
+
+export async function getEventData() {
+    const divisionQuery = await getDoc(doc(firestore, "events", event));
+    console.log(divisionQuery.data());
+    return divisionQuery.data() as EventData;
 }
 
 export async function getAllTeams() {
