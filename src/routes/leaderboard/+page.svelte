@@ -23,5 +23,11 @@
         <TeamDisplay data={team} />
       {/each}
     </div>
+    <div class="p-2 bg-sky-300 rounded-lg">
+      <label for="week-select">Week</label>
+      <select id="week-select">
+        <option>1</option>
+      </select>
+    </div>
   {/if}
 </div>
