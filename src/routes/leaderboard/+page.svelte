@@ -13,8 +13,8 @@
   });
 </script>
 
-<div class="flex gap-3 m-3">
+<div class="flex items-start gap-3 m-3">
   {#each teams as team}
-    <TeamDisplay name={team.name} />
+    <TeamDisplay data={team} />
   {/each}
 </div>
