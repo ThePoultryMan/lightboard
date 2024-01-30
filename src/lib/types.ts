@@ -13,3 +13,12 @@ export interface Team {
     name: string;
     members: string[];
 }
+
+export interface ScoreCollection {
+    [key: string]: Score;
+}
+
+export interface Score {
+    score: number;
+    breaker: number;
+}

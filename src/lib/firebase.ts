@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
 
-import type { EventData, Team } from "./types";
+import type { Division, EventData, ScoreCollection, Team } from "./types";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD0_LsObqQ_S0cgpiaAbprJtILOjPiiM4c",
@@ -30,7 +30,6 @@ export function isSetup() {
 
 export async function getEventData() {
     const divisionQuery = await getDoc(doc(firestore, "events", event));
-    console.log(divisionQuery.data());
     return divisionQuery.data() as EventData;
 }
 
@@ -42,4 +41,21 @@ export async function getAllTeams() {
     });
 
     return teams;
+}
+
+export async function getDivisionNames() {
+    const divisionQuery = await getDoc(doc(firestore, "events", event));
+    const divisions = divisionQuery.data()?.scoring.divisions as Division[];
+
+    return divisions.map((d) => d.name);
+}
+
+export async function getScores() {
+    const scoresQuery = await getDocs(collection(firestore, "events", event, "scores"));
+    const scores: ScoreCollection[] = [];
+    scoresQuery.forEach((document) => {
+        scores.push(document.data() as ScoreCollection);
+    });
+
+    return scores;
 }
