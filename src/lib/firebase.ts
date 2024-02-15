@@ -43,6 +43,14 @@ export async function getAllTeams() {
     return teams;
 }
 
+export async function getDivision(eventData: EventData, name: string) {
+    for (const division of eventData.scoring.divisions) {
+        if (division.name === name) {
+            return division;
+        }
+    }
+}
+
 export async function getDivisionNames() {
     const divisionQuery = await getDoc(doc(firestore, "events", event));
     const divisions = divisionQuery.data()?.scoring.divisions as Division[];

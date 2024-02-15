@@ -1,6 +1,12 @@
 export interface EventData {
+    meta: EventMeta;
+    scoring: {
+        divisions: Division[];
+    }
+}
+
+interface EventMeta {
     name: string;
-    divisions: Division[];
 }
 
 export interface Division {
