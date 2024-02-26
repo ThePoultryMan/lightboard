@@ -19,26 +19,36 @@
         </p>
       </div>
     </Transition>
-    <div class="flex justify-evenly items-end h-[128px] w-full border-b mt-5">
-      <div :id="'Week 1-bar-' + teamName" class="flex items-center gap-3">
-        <h3>Week 1</h3>
-        <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
-        <h3 class="font-bold">{{ teamScores["Week 1"] }}</h3>
-      </div>
-      <div :id="'Week 2A-bar-' + teamName" class="flex items-center gap-3">
-        <h3>Week 2A</h3>
-        <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
-        <h3 class="font-bold">{{ teamScores["Week 2A"] }}</h3>
-      </div>
-      <div :id="'Week 2B-bar-' + teamName" class="flex items-center gap-3">
-        <h3>Week 2B</h3>
-        <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
-        <h3 class="font-bold">{{ teamScores["Week 2B"] }}</h3>
-      </div>
-      <div :id="'Week 3-bar-' + teamName" class="flex items-center gap-3">
-        <h3>Week 3</h3>
-        <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
-        <h3 class="font-bold">{{ teamScores["Week 3"] }}</h3>
+    <div class="w-full overflow-scroll">
+      <div class="flex justify-evenly items-end h-[128px] w-[125%] sm:w-[110%] md:w-full border-b mt-5">
+        <div :id="'Week 1-bar-' + teamName" class="flex items-center gap-3">
+          <div class="mb-7">
+            <h3>Week 1</h3>
+            <h3 class="font-bold">{{ teamScores["Week 1"] }}</h3>
+          </div>
+          <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
+        </div>
+        <div :id="'Week 2A-bar-' + teamName" class="flex items-center gap-3">
+          <div class="mb-7">
+            <h3>Week 2A</h3>
+            <h3 class="font-bold">{{ teamScores["Week 2A"] }}</h3>
+          </div>
+          <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
+        </div>
+        <div :id="'Week 2B-bar-' + teamName" class="flex items-center gap-3">
+          <div class="mb-7">
+            <h3>Week 2B</h3>
+            <h3 class="font-bold">{{ teamScores["Week 2B"] }}</h3>
+          </div>
+          <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
+        </div>
+        <div :id="'Week 3-bar-' + teamName" class="flex items-center gap-3">
+          <div class="mb-7">
+            <h3>Week 3</h3>
+            <h3 class="font-bold">{{ teamScores["Week 3"] }}</h3>
+          </div>
+          <div :class="[getTeamColor(teamColor, 400)]" class="h-full w-5 rounded-t-md" />
+        </div>
       </div>
     </div>
   </div>
