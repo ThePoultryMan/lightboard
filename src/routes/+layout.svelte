@@ -4,6 +4,10 @@
   let { children } = $props();
 </script>
 
+<svelte:head>
+  <title>Lightboard</title>
+</svelte:head>
+
 <header>
   <Header />
 </header>
