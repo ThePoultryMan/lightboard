@@ -1,7 +1,9 @@
 <script lang="ts">
+  import "../app.css";
+
   import Footer from "$components/Footer.svelte";
   import Header from "$components/Header.svelte";
-  import "../app.css";
+
   let { children } = $props();
 </script>
 
@@ -9,7 +11,7 @@
   <title>Lightboard</title>
 </svelte:head>
 
-<div class="flex flex-col min-h-screen">
+<div class="flex min-h-screen flex-col">
   <header>
     <Header />
   </header>
