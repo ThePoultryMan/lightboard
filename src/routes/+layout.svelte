@@ -11,7 +11,7 @@
   <title>Lightboard</title>
 </svelte:head>
 
-<div class="flex min-h-screen flex-col">
+<div class="flex min-h-screen flex-col text-slate-200">
   <header>
     <Header />
   </header>
