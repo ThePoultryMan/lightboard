@@ -19,16 +19,29 @@
 </script>
 
 {#if data}
-  <h1 class="text-2xl mb-3.5 font-semibold">{data.metaData?.displayName}</h1>
-  <div class="md:flex gap-3">
+  <h1 class="mb-3.5 text-2xl font-semibold">{data.metaData.displayName}</h1>
+  <div class="gap-3 md:flex">
     {#each data.teams as team}
-      <div class="flex-1 rounded-lg bg-red-900 mb-2.5 p-2">
-        <div class="flex justify-between">
+      <div class="mb-2.5 flex-1 rounded-lg bg-red-900 p-2">
+        <!--Team Header-->
+        <div class="mb-3 flex justify-between">
           <p class="text-xl">{team.meta.displayName}</p>
           <div class="text-right">
-            <p class="text-lg m-1 leading-2 font-semibold">0</p>
-            <p class="text-sm mr-1">Team Points</p>
+            <p class="m-1 text-lg leading-2 font-semibold">0</p>
+            <p class="mr-1 text-sm">Team Points</p>
           </div>
+        </div>
+        <!--Section Display-->
+        <div class="flex justify-evenly items-end h-44 p-2.5 pb-0 border-1 border-red-500 rounded-lg">
+          {#each data.metaData.sections as section}
+            <div class="flex gap-3">
+              <div>
+                <p>{section.displayName}</p>
+                <p class="font-bold">[score]</p>
+              </div>
+              <div class="w-5 rounded-t-md bg-red-500" style="height: 48px;"></div>
+            </div>
+          {/each}
         </div>
       </div>
     {/each}

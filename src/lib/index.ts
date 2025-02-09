@@ -1,11 +1,17 @@
 import type { Score } from "./score";
 
 export type Event = {
-  metaData?: EventMetaData;
+  metaData: EventMetaData;
   teams: TeamData[];
 };
 
 export type EventMetaData = {
+  displayName: string;
+  sections: Section[];
+};
+
+export type Section = {
+  index: number;
   displayName: string;
 };
 
@@ -28,6 +34,10 @@ export type ScoreData = {
 
 export function emptyEvent() {
   return {
+    metaData: {
+      displayName: "loading",
+      sections: [],
+    },
     teams: [],
   } as Event;
 }
