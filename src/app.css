@@ -4,3 +4,13 @@
   --color-secondary-500: #323639;
   --color-background-500: #181a1b;
 }
+
+@layer components {
+  .blue-link {
+    color: var(--color-blue-400);
+  }
+  
+  .blue-link:hover {
+    text-decoration: underline;
+  }
+}

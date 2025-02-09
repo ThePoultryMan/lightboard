@@ -8,9 +8,9 @@
     Made with <Icon icon="ph:heart-straight-fill" style="display: inline; color: #fb2c36" />
     <span class="line-through">and stack overflow</span>
     by
-    <Link href="https://github.com/ThePoultryMan" class="text-blue-400">ThePoultryMan</Link>
+    <Link href="https://github.com/ThePoultryMan" class="blue-link">ThePoultryMan</Link>
   </p>
-  <ul class="text-blue-400">
-    <li><Link href="https://github.com/ThePoultryMan/lightboard">GitHub</Link></li>
+  <ul>
+    <li><Link href="https://github.com/ThePoultryMan/lightboard" class="blue-link">GitHub</Link></li>
   </ul>
 </div>
