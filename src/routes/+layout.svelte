@@ -3,8 +3,18 @@
 
   import Footer from "$components/Footer.svelte";
   import Header from "$components/Header.svelte";
+  import { onMount } from "svelte";
+  import { page } from "$app/state";
+  import { sessionData } from "$lib/index.svelte";
 
   let { children } = $props();
+
+  onMount(() => {
+    let eventCode = page.url.searchParams.get("e");
+    if (eventCode) {
+      sessionData.eventCode = eventCode;
+    }
+  });
 </script>
 
 <svelte:head>
