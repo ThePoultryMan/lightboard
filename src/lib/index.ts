@@ -18,7 +18,7 @@ export type TeamData = {
 
 export type Participant = {
   name: string;
-  scores: ScoreData;
+  scores: ScoreData[];
 };
 
 export type ScoreData = {
