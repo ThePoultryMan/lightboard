@@ -1,3 +1,6 @@
 export let sessionData: {
-  eventCode?: string | undefined;
+  eventCode?: {
+    org: string;
+    event: string;
+  };
 } = $state({});

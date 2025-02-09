@@ -12,7 +12,11 @@
   onMount(() => {
     let eventCode = page.url.searchParams.get("e");
     if (eventCode) {
-      sessionData.eventCode = eventCode;
+      const split = eventCode.split("/");
+      sessionData.eventCode = {
+        org: split[0],
+        event: split[1],
+      };
     }
   });
 </script>
@@ -25,7 +29,7 @@
   <header>
     <Header />
   </header>
-  <div class="flex-1">
+  <div class="bg-background-500 flex-1 px-5 py-3">
     {@render children()}
   </div>
   <footer>
