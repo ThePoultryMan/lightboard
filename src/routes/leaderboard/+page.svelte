@@ -37,7 +37,7 @@
             <div class="flex gap-3">
               <div>
                 <p>{section.displayName}</p>
-                <p class="font-bold">[score]</p>
+                <p class="font-bold">0</p>
               </div>
               <div class="w-5 rounded-t-md bg-red-500" style="height: 48px;"></div>
             </div>
