@@ -35,7 +35,7 @@
         <div class="flex justify-evenly items-end h-44 p-2.5 pb-0 border-1 border-red-500 rounded-lg">
           {#each data.metaData.sections as section}
             <div class="flex gap-3">
-              <div>
+              <div class="text-right">
                 <p>{section.displayName}</p>
                 <p class="font-bold">0</p>
               </div>
