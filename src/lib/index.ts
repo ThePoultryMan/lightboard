@@ -8,11 +8,17 @@ export type Event = {
 export type EventMetaData = {
   displayName: string;
   sections: Section[];
+  divisions: Division[];
 };
 
 export type Section = {
   index: number;
   displayName: string;
+};
+
+export type Division = {
+  displayName: String;
+  index: number;
 };
 
 export type TeamData = {
@@ -29,6 +35,7 @@ export type Participant = {
 
 export type ScoreData = {
   section: number;
+  division: number;
   score: Score;
 };
 
@@ -37,6 +44,7 @@ export function emptyEvent() {
     metaData: {
       displayName: "loading",
       sections: [],
+      divisions: [],
     },
     teams: [],
   } as Event;
