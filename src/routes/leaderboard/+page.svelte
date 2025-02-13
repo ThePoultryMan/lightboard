@@ -15,6 +15,8 @@
     });
     return participants;
   });
+  let division = $state(0);
+  let section = $state(0);
 
   onMount(async () => {
     if (sessionData.eventCode) {
@@ -63,14 +65,19 @@
   <div class="rounded-lg bg-indigo-900 p-3">
     <div class="mb-1.5 flex gap-3">
       <h2 class="text-lg">Leaderboard</h2>
-      <select class="rounded-md px-1.5 py-1 bg-indigo-950">
+      <select bind:value={section} class="rounded-md px-1.5 py-1 bg-indigo-950">
+        {#each data.metaData.sections as section}
+          <option value={section.index}>{section.displayName}</option>
+        {/each}
+      </select>
+      <select bind:value={division} class="rounded-md px-1.5 py-1 bg-indigo-950">
         {#each data.metaData.divisions as division}
-          <option>{division.displayName}</option>
+          <option value={division.index}>{division.displayName}</option>
         {/each}
       </select>
     </div>
     <ol class="list-inside list-decimal">
-      {#each sortLeaderboard(getTeamScores(mergedParticipants, 0)) as sectionScore}
+      {#each sortLeaderboard(getTeamScores(mergedParticipants, section, division)) as sectionScore}
         <li>
           {sectionScore.name}: {sectionScore.scoreData.score} <span class="mx-3">-</span>
           {sectionScore.adjustedScore} Team Points
