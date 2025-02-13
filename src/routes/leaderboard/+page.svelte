@@ -64,7 +64,7 @@
     <h2 class="mb-1.5 text-lg">Leaderboard</h2>
     <ol class="list-decimal list-inside">
       {#each sortLeaderboard(getTeamScores(mergedParticipants, 0)) as sectionScore}
-        <li>{sectionScore.name}</li>
+        <li>{sectionScore.name}: {sectionScore.scoreData.score} <span class="mx-3">-</span> {sectionScore.adjustedScore} Team Points</li>
       {/each}
     </ol>
   </div>

@@ -42,6 +42,7 @@ export type ScoreData = {
 export type TeamScore = {
   name: String;
   scoreData: ScoreData;
+  adjustedScore: number,
 };
 
 export function emptyEvent() {
