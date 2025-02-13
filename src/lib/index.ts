@@ -39,6 +39,11 @@ export type ScoreData = {
   score: Score;
 };
 
+export type TeamScore = {
+  name: String;
+  scoreData: ScoreData;
+};
+
 export function emptyEvent() {
   return {
     metaData: {

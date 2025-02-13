@@ -1,9 +1,20 @@
 <script lang="ts">
   import type { Event, Participant } from "$lib";
   import { sessionData } from "$lib/index.svelte.js";
+  import { getTeamScores, sortLeaderboard } from "$lib/scoring/util";
   import { onMount } from "svelte";
 
   let data: Event | undefined = $state(undefined);
+  let mergedParticipants = $derived.by(() => {
+    if (!data) return [];
+    const participants: Participant[] = [];
+    data?.teams.forEach((team) => {
+      if (team.participants) {
+        participants.push(...team.participants);
+      }
+    });
+    return participants;
+  });
 
   onMount(async () => {
     if (sessionData.eventCode) {
@@ -47,5 +58,14 @@
         </div>
       </div>
     {/each}
+  </div>
+  <!--Leader Board-->
+  <div class="rounded-lg bg-indigo-900 p-3">
+    <h2 class="mb-1.5 text-lg">Leaderboard</h2>
+    <ol class="list-decimal list-inside">
+      {#each sortLeaderboard(getTeamScores(mergedParticipants, 0)) as sectionScore}
+        <li>{sectionScore.name}</li>
+      {/each}
+    </ol>
   </div>
 {/if}
