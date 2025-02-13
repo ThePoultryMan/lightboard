@@ -61,10 +61,20 @@
   </div>
   <!--Leader Board-->
   <div class="rounded-lg bg-indigo-900 p-3">
-    <h2 class="mb-1.5 text-lg">Leaderboard</h2>
-    <ol class="list-decimal list-inside">
+    <div class="mb-1.5 flex gap-3">
+      <h2 class="text-lg">Leaderboard</h2>
+      <select class="rounded-md px-1.5 py-1 bg-indigo-950">
+        {#each data.metaData.divisions as division}
+          <option>{division.displayName}</option>
+        {/each}
+      </select>
+    </div>
+    <ol class="list-inside list-decimal">
       {#each sortLeaderboard(getTeamScores(mergedParticipants, 0)) as sectionScore}
-        <li>{sectionScore.name}: {sectionScore.scoreData.score} <span class="mx-3">-</span> {sectionScore.adjustedScore} Team Points</li>
+        <li>
+          {sectionScore.name}: {sectionScore.scoreData.score} <span class="mx-3">-</span>
+          {sectionScore.adjustedScore} Team Points
+        </li>
       {/each}
     </ol>
   </div>
