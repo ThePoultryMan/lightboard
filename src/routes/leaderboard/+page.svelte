@@ -4,7 +4,6 @@
   import { onMount } from "svelte";
 
   let data: Event | undefined = $state(undefined);
-  $inspect(data);
 
   onMount(async () => {
     if (sessionData.eventCode) {
