@@ -1,4 +1,4 @@
-import type { Score } from "./score";
+import type { Score } from "./scoring";
 
 export type Event = {
   metaData: EventMetaData;

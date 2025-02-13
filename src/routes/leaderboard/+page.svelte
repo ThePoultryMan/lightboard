@@ -1,9 +1,10 @@
 <script lang="ts">
-  import type { Event } from "$lib";
+  import type { Event, Participant } from "$lib";
   import { sessionData } from "$lib/index.svelte.js";
   import { onMount } from "svelte";
 
-  let data: Event;
+  let data: Event | undefined = $state(undefined);
+  $inspect(data);
 
   onMount(async () => {
     if (sessionData.eventCode) {
@@ -32,7 +33,9 @@
           </div>
         </div>
         <!--Section Display-->
-        <div class="flex justify-evenly items-end h-44 p-2.5 pb-0 border-1 border-red-500 rounded-lg">
+        <div
+          class="flex h-44 items-end justify-evenly rounded-lg border-1 border-red-500 p-2.5 pb-0"
+        >
           {#each data.metaData.sections as section}
             <div class="flex gap-3">
               <div class="text-right">
