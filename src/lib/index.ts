@@ -19,6 +19,8 @@ export type Section = {
 export type Division = {
   displayName: String;
   index: number;
+  scoreStart: number;
+  scoreDecrease: number;
 };
 
 export type TeamData = {

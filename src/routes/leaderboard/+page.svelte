@@ -77,7 +77,7 @@
       </select>
     </div>
     <ol class="list-inside list-decimal">
-      {#each sortLeaderboard(getTeamScores(mergedParticipants, section, division)) as sectionScore}
+      {#each sortLeaderboard(getTeamScores(mergedParticipants, section, data.metaData.divisions[division])) as sectionScore}
         <li>
           {sectionScore.name}: {sectionScore.scoreData.score} <span class="mx-3">-</span>
           {sectionScore.adjustedScore} Team Points

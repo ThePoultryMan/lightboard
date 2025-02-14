@@ -1,4 +1,4 @@
-import type { Participant, TeamScore } from "$lib";
+import type { Division, Participant, TeamScore } from "$lib";
 
 export function sortLeaderboard(participants: TeamScore[]): TeamScore[] {
   if (participants && participants.length <= 1) return participants;
@@ -8,21 +8,19 @@ export function sortLeaderboard(participants: TeamScore[]): TeamScore[] {
 export function getTeamScores(
   participants: Participant[],
   section: number,
-  division: number,
+  division: Division,
 ): TeamScore[] {
   let sectionScores: TeamScore[] = [];
-  let startScore = 40;
-  let decay = 2;
   participants.forEach((participant, index) => {
     if (
       participant.scores &&
       participant.scores[section] &&
-      participant.scores[section].division === division
+      participant.scores[section].division === division.index
     ) {
       sectionScores.push({
         name: participant.name,
         scoreData: participant.scores[section],
-        adjustedScore: startScore - decay * index,
+        adjustedScore: division.scoreStart - division.scoreDecrease * index,
       });
     }
   });
