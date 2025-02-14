@@ -3,7 +3,7 @@ import { json, type RequestHandler } from "@sveltejs/kit";
 
 import { emptyEvent, type EventMetaData, type TeamData } from "$lib";
 import { createFirebaseApp } from "$lib/index.server";
-import { sortSections } from "$lib/util";
+import { sortByIndex } from "$lib/util";
 
 export const GET: RequestHandler = async ({ url }) => {
   const org = url.searchParams.get("org");
@@ -16,7 +16,8 @@ export const GET: RequestHandler = async ({ url }) => {
   eventData.metaData = (
     await getDoc(doc(firestore, collectionPath, "meta"))
   ).data() as EventMetaData;
-  sortSections(eventData.metaData.sections);
+  sortByIndex(eventData.metaData.sections);
+  sortByIndex(eventData.metaData.divisions);
 
   let collectionReference = collection(firestore, collectionPath);
   let teamQuery = query(collectionReference, where("__name__", "!=", "meta"));
