@@ -1,8 +1,11 @@
 import type { Division, Participant, TeamScore } from "$lib";
+import { compareScores } from ".";
 
 export function sortLeaderboard(participants: TeamScore[]): TeamScore[] {
   if (participants && participants.length <= 1) return participants;
-  return participants.sort((a, b) => a.scoreData.score.compare(b.scoreData.score));
+  return participants.sort((a, b) => {
+    return compareScores(a, b, a.scoreData.scoreType);
+  });
 }
 
 export function getTeamScores(

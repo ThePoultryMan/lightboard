@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from "$app/environment";
   import type { Event, Participant } from "$lib";
   import { sessionData } from "$lib/index.svelte.js";
   import { getTeamScores, sortLeaderboard } from "$lib/scoring/util";
@@ -17,6 +18,30 @@
   });
   let division = $state(0);
   let section = $state(0);
+  let summedSectionScores = $derived.by(() => {
+    if (!data?.metaData.sections || !data.metaData.divisions) return {};
+    const summedSectionScores: any = {};
+    data?.teams.forEach((team) => {
+      for (const section of data?.metaData.sections!) {
+        if (team.participants) {
+          let sum = 0;
+          for (const division of data?.metaData.divisions!) {
+            getTeamScores(team.participants, section.index, division).forEach((teamScore) => {
+              sum += teamScore.adjustedScore;
+            });
+          }
+          summedSectionScores[team.meta.displayName] = summedSectionScores[team.meta.displayName]
+            ? summedSectionScores[team.meta.displayName]
+            : {};
+          summedSectionScores[team.meta.displayName][section.index] = sum;
+        } else {
+          summedSectionScores[team.meta.displayName] = {};
+          summedSectionScores[team.meta.displayName][section.index] = 0;
+        }
+      }
+    });
+    return summedSectionScores;
+  });
 
   onMount(async () => {
     if (sessionData.eventCode) {
@@ -52,7 +77,11 @@
             <div class="flex gap-3">
               <div class="text-right">
                 <p>{section.displayName}</p>
-                <p class="font-bold">0</p>
+                <p class="font-bold">
+                  {summedSectionScores[team.meta.displayName][section.index]
+                    ? summedSectionScores[team.meta.displayName][section.index]
+                    : 0}
+                </p>
               </div>
               <div class="w-5 rounded-t-md bg-red-500" style="height: 48px;"></div>
             </div>
@@ -65,19 +94,19 @@
   <div class="rounded-lg bg-indigo-900 p-3">
     <div class="mb-1.5 flex gap-3">
       <h2 class="text-lg">Leaderboard</h2>
-      <select bind:value={section} class="rounded-md px-1.5 py-1 bg-indigo-950">
+      <select bind:value={section} class="rounded-md bg-indigo-950 px-1.5 py-1">
         {#each data.metaData.sections as section}
           <option value={section.index}>{section.displayName}</option>
         {/each}
       </select>
-      <select bind:value={division} class="rounded-md px-1.5 py-1 bg-indigo-950">
+      <select bind:value={division} class="rounded-md bg-indigo-950 px-1.5 py-1">
         {#each data.metaData.divisions as division}
           <option value={division.index}>{division.displayName}</option>
         {/each}
       </select>
     </div>
     <ol class="list-inside list-decimal">
-      {#each sortLeaderboard(getTeamScores(mergedParticipants, section, data.metaData.divisions[division])) as sectionScore}
+      {#each sortLeaderboard(getTeamScores(mergedParticipants, section, data.metaData.divisions[division]), ) as sectionScore}
         <li>
           {sectionScore.name}: {sectionScore.scoreData.score} <span class="mx-3">-</span>
           {sectionScore.adjustedScore} Team Points

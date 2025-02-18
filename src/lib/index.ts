@@ -1,4 +1,4 @@
-import type { Score } from "./scoring";
+import type { Score, ScoreType } from "./scoring";
 
 export type Event = {
   metaData: EventMetaData;
@@ -38,13 +38,14 @@ export type Participant = {
 export type ScoreData = {
   section: number;
   division: number;
+  scoreType: ScoreType;
   score: Score;
 };
 
 export type TeamScore = {
   name: String;
   scoreData: ScoreData;
-  adjustedScore: number,
+  adjustedScore: number;
 };
 
 export function emptyEvent() {
