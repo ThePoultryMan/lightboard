@@ -42,6 +42,23 @@
     });
     return summedSectionScores;
   });
+  const teamPoints: Record<string, Number> = $derived.by(() => {
+    if (summedSectionScores) {
+      const result: Record<string, number> = {};
+      for (const team of Object.keys(summedSectionScores)) {
+        let sum = 0;
+        for (const section of Object.keys(summedSectionScores[team])) {
+          sum += summedSectionScores[team][section];
+        }
+        result[team] = sum;
+      }
+      // console.log(Object.keys(summedSectionScores))
+      return result;
+    } else {
+      return {}
+    }
+  });
+  $inspect(teamPoints)
 
   onMount(async () => {
     if (sessionData.eventCode) {
@@ -65,7 +82,7 @@
         <div class="mb-3 flex justify-between">
           <p class="text-xl">{team.meta.displayName}</p>
           <div class="text-right">
-            <p class="m-1 text-lg leading-2 font-semibold">0</p>
+            <p class="m-1 text-lg leading-2 font-semibold">{teamPoints ? teamPoints[team.meta.displayName] : 0}</p>
             <p class="mr-1 text-sm">Team Points</p>
           </div>
         </div>
