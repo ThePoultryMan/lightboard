@@ -3,6 +3,7 @@
   import type { Event, Participant } from "$lib";
   import { sessionData } from "$lib/index.svelte.js";
   import { getTeamScores, sortLeaderboard } from "$lib/scoring/util";
+  import { participantsIncludes } from "$lib/util";
   import { onMount } from "svelte";
 
   let data: Event | undefined = $state(undefined);
@@ -18,16 +19,23 @@
   });
   let division = $state(0);
   let section = $state(0);
+  // TODO: Iterate within divisions.
   let summedSectionScores = $derived.by(() => {
     if (!data?.metaData.sections || !data.metaData.divisions) return {};
     const summedSectionScores: any = {};
+    const allParticipant: Participant[] = [];
+    for (const team of data?.teams) {
+      allParticipant.push(...team.participants);
+    }
     data?.teams.forEach((team) => {
       for (const section of data?.metaData.sections!) {
         if (team.participants) {
           let sum = 0;
           for (const division of data?.metaData.divisions!) {
-            getTeamScores(team.participants, section.index, division).forEach((teamScore) => {
-              sum += teamScore.adjustedScore;
+            getTeamScores(allParticipant, section.index, division).forEach((teamScore) => {
+              if (participantsIncludes(team.participants, teamScore)) {
+                sum += teamScore.adjustedScore;
+              }
             });
           }
           summedSectionScores[team.meta.displayName] = summedSectionScores[team.meta.displayName]
@@ -55,10 +63,10 @@
       // console.log(Object.keys(summedSectionScores))
       return result;
     } else {
-      return {}
+      return {};
     }
   });
-  $inspect(teamPoints)
+  $inspect(teamPoints);
 
   onMount(async () => {
     if (sessionData.eventCode) {
@@ -82,7 +90,9 @@
         <div class="mb-3 flex justify-between">
           <p class="text-xl">{team.meta.displayName}</p>
           <div class="text-right">
-            <p class="m-1 text-lg leading-2 font-semibold">{teamPoints ? teamPoints[team.meta.displayName] : 0}</p>
+            <p class="m-1 text-lg leading-2 font-semibold">
+              {teamPoints ? teamPoints[team.meta.displayName] : 0}
+            </p>
             <p class="mr-1 text-sm">Team Points</p>
           </div>
         </div>
@@ -123,7 +133,7 @@
       </select>
     </div>
     <ol class="list-inside list-decimal">
-      {#each sortLeaderboard(getTeamScores(mergedParticipants, section, data.metaData.divisions[division]), ) as sectionScore}
+      {#each sortLeaderboard(getTeamScores(mergedParticipants, section, data.metaData.divisions[division])) as sectionScore}
         <li>
           {sectionScore.name}: {sectionScore.scoreData.score} <span class="mx-3">-</span>
           {sectionScore.adjustedScore} Team Points
