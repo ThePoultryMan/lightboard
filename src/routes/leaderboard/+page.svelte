@@ -66,7 +66,6 @@
       return {};
     }
   });
-  $inspect(teamPoints);
 
   onMount(async () => {
     if (sessionData.eventCode) {
