@@ -1,4 +1,4 @@
-import { initializeApp, type FirebaseOptions } from "firebase/app";
+import { initializeApp, type FirebaseApp, type FirebaseOptions } from "firebase/app";
 
 import {
   API_KEY,
@@ -8,6 +8,7 @@ import {
   PROJECT_ID,
   STORAGE_BUCKET,
 } from "$env/static/private";
+import { createUserWithEmailAndPassword, getAuth, initializeAuth } from "firebase/auth";
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: API_KEY,
@@ -17,7 +18,20 @@ const firebaseConfig: FirebaseOptions = {
   messagingSenderId: MESSAGE_SENDER_ID,
   appId: APP_ID,
 };
+let firebaseApp: FirebaseApp | undefined;
 
-export function createFirebaseApp() {
-  return initializeApp(firebaseConfig);
+export function getFirebaseApp() {
+  if (!firebaseApp) {
+    firebaseApp = initializeApp(firebaseConfig);
+    return firebaseApp;
+  } else {
+    return firebaseApp;
+  }
+}
+
+export async function signInOrUp(email: string, password: string) {
+  getFirebaseApp();
+  const auth = getAuth();
+
+  return await createUserWithEmailAndPassword(auth, email, password);
 }

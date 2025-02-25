@@ -2,14 +2,14 @@ import { collection, doc, getDoc, getDocs, getFirestore, query, where } from "fi
 import { json, type RequestHandler } from "@sveltejs/kit";
 
 import { emptyEvent, type EventMetaData, type TeamData } from "$lib";
-import { createFirebaseApp } from "$lib/index.server";
+import { getFirebaseApp } from "$lib/index.server";
 import { sortByIndex } from "$lib/util";
 
 export const GET: RequestHandler = async ({ url }) => {
   const org = url.searchParams.get("org");
   const event = url.searchParams.get("event");
 
-  const firestore = getFirestore(createFirebaseApp());
+  const firestore = getFirestore(getFirebaseApp());
   const collectionPath = `/orgs/${org}/${event}`;
 
   let eventData = emptyEvent();
