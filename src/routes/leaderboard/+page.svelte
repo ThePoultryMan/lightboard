@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
   import type { Event, Participant } from "$lib";
+  import { getEventData } from "$lib/firebase";
   import { sessionData } from "$lib/index.svelte.js";
   import { getTeamScores, sortLeaderboard } from "$lib/scoring/util";
   import { participantsIncludes } from "$lib/util";
@@ -69,13 +69,9 @@
 
   onMount(async () => {
     if (sessionData.eventCode) {
-      fetch(
-        `/api/event-data/?org=${sessionData.eventCode.org}&event=${sessionData.eventCode.event}`,
-      ).then((response) => response.json().then((json) => (data = json)));
+      data = await getEventData(sessionData.eventCode.org, sessionData.eventCode.event);
     } else {
-      fetch(`/api/event-data/?org=example&event=example-event-1`).then((response) =>
-        response.json().then((json) => (data = json)),
-      );
+      data = await getEventData("example", "example-event-1");
     }
   });
 </script>

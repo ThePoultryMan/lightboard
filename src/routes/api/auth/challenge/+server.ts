@@ -1,5 +1,4 @@
 import { TURNSTILE_SECRET_KEY } from "$env/static/private";
-import { signInOrUp as signInOrUp } from "$lib/index.server";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -29,12 +28,8 @@ export const POST: RequestHandler = async ({ request }) => {
       message: "Turnstile token was not valid",
     });
   } else {
-    const user = await signInOrUp(email.toString(), password.toString());
-
     return json({
       succeeded: true,
-      user,
     });
   }
-
 };

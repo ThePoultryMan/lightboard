@@ -4,7 +4,7 @@
 
 <div class="bg-secondary-500 sticky top-0 flex items-center gap-5 px-3 py-2">
   <span class="text-lg"><Link href="/">Lightboard</Link></span>
-  <nav class="flex justify-between">
+  <nav class="flex justify-between w-full">
     <div class="*:mx-3">
       <Link href="/">
         Home
@@ -12,6 +12,9 @@
       <Link href="/leaderboard">
         Leaderboard
       </Link>
+    </div>
+    <div>
+      <Link href="/account">Sign In</Link>
     </div>
   </nav>
 </div>
