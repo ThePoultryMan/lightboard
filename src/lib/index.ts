@@ -7,6 +7,7 @@ export type Event = {
 
 export type EventMetaData = {
   displayName: string;
+  admins: String[]
   sections: Section[];
   divisions: Division[];
 };
@@ -51,6 +52,7 @@ export type TeamScore = {
 export function emptyEvent() {
   return {
     metaData: {
+      admins: [],
       displayName: "loading",
       sections: [],
       divisions: [],
