@@ -190,7 +190,12 @@
                   <ul class="list-dash ml-2 list-inside">
                     {#each team.participants as participant}
                       <li>
-                        <input type="text" class="editable-input" readonly bind:value={participant.name} />
+                        <input
+                          type="text"
+                          class="editable-input"
+                          readonly
+                          bind:value={participant.name}
+                        />
                       </li>
                     {/each}
                   </ul>
