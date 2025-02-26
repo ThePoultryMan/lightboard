@@ -5,7 +5,7 @@
   import type { Event } from "$lib";
   import { Warning } from "$lib/admin";
   import { getEventData } from "$lib/firebase";
-  import { getUserInfo, type UserInfo } from "$lib/firebase/admin";
+  import { getUserInfo, saveEventData, type UserInfo } from "$lib/firebase/admin";
   import { sessionData } from "$lib/index.svelte";
   import { ScoreTypes } from "$lib/scoring";
   import Icon from "@iconify/svelte";
@@ -60,13 +60,23 @@
   onMount(async () => {
     eventData = await getEventData(data.org, data.event);
   });
+
+  async function save() {
+    console.log("saving...");
+    const saved = await saveEventData(data.org, data.event, eventData);
+    if (saved) {
+      alert("Data has been saved");
+    } else {
+      alert("Data was *NOT* saved.");
+    }
+  }
 </script>
 
 {#if sessionData.user}
   {#await currentUserInfo then userInfo}
     {#if userInfo.admins.includes(`${data.org}/${data.event}`)}
       {#if eventData}
-        <div class="mb-5 flex items-center gap-5">
+        <div class="mb-5 flex items-center justify-between gap-5">
           <h1 class="my-2 text-2xl leading-none font-semibold">
             <span class="text-slate-400">{data.org}</span> <span class="text-slate-300">&gt;</span>
             {eventData.metaData.displayName}
@@ -82,6 +92,14 @@
               </ul>
             </div>
           {/if}
+          <!--Save Button-->
+          <button
+            class="rounded-lg bg-neutral-700 px-5 py-2 disabled:bg-neutral-800 disabled:text-slate-500"
+            disabled={warnings.length >= 1}
+            onclick={save}
+          >
+            Save
+          </button>
         </div>
         <div class="flex gap-3">
           <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">

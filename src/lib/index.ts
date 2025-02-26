@@ -26,6 +26,7 @@ export type Division = {
 export type TeamData = {
   meta: {
     displayName: string;
+    id: string,
   };
   participants: Participant[];
 };
