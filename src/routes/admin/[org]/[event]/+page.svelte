@@ -6,6 +6,7 @@
   import { getUserInfo, type UserInfo } from "$lib/firebase/admin";
   import { sessionData } from "$lib/index.svelte";
   import { ScoreType, ScoreTypes } from "$lib/scoring";
+  import Icon from "@iconify/svelte";
   import { onMount } from "svelte";
 
   let {
@@ -186,7 +187,15 @@
                   titleEditable
                   titleName="Team Name"
                 >
-                  <p>Members:</p>
+                  <div class="flex gap-3">
+                    <p>Members:</p>
+                    <button
+                      class="flex h-6 w-6 items-center justify-center rounded-lg bg-neutral-700"
+                      onclick={() => team.participants.push({ name: "New Member", scores: [] })}
+                    >
+                      <Icon icon="material-symbols:add-2-rounded" />
+                    </button>
+                  </div>
                   <ul class="list-dash ml-2 list-inside">
                     {#each team.participants as participant}
                       <li>
