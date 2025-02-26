@@ -14,18 +14,19 @@ export function getTeamScores(
   division: Division,
 ): TeamScore[] {
   let sectionScores: TeamScore[] = [];
-  participants.forEach((participant, index) => {
-    if (
-      participant.scores &&
-      participant.scores[section] &&
-      participant.scores[section].division === division.index
-    ) {
+  participants
+    .filter(
+      (participant) =>
+        participant.scores &&
+        participant.scores[section] &&
+        participant.scores[section].division === division.index,
+    )
+    .forEach((participant, index) => {
       sectionScores.push({
         name: participant.name,
         scoreData: participant.scores[section],
         adjustedScore: division.scoreStart - division.scoreDecrease * index,
       });
-    }
-  });
+    });
   return sectionScores;
 }
