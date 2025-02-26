@@ -43,6 +43,7 @@
     }
   });
   let eventData: Event | undefined = $state();
+  // TODO: Make warning system not god awful like it is now.
   let warnings: Warning[] = $derived.by(() => {
     const warnings: Warning[] = [];
     if (new Set(mergedParticipantNames).size !== mergedParticipantNames.length) {
@@ -51,6 +52,44 @@
       const index = warnings.indexOf(Warning.DuplicateMembers);
       if (index > -1) {
         warnings.splice(index, 1);
+      }
+    }
+
+    if (eventData) {
+      const seenIndexes: number[] = [];
+      let foundIndexWarning = false;
+      for (const section of eventData.metaData.sections) {
+        if (seenIndexes.includes(section.index)) {
+          warnings.push(Warning.DuplicateSectionIndexes);
+          foundIndexWarning = true;
+          break;
+        } else {
+          seenIndexes.push(section.index);
+        }
+      }
+      if (!foundIndexWarning) {
+        const index = warnings.indexOf(Warning.DuplicateSectionIndexes);
+        if (index > -1) {
+          warnings.splice(index, 1);
+        }
+      }
+
+      const seenDisplayNames: string[] = [];
+      let foundNameWarning = false;
+      for (const section of eventData.metaData.sections) {
+        if (seenDisplayNames.includes(section.displayName)) {
+          warnings.push(Warning.DuplicateSectionNames);
+          foundNameWarning = true;
+          break;
+        } else {
+          seenDisplayNames.push(section.displayName);
+        }
+      }
+      if (!foundNameWarning) {
+        const index = warnings.indexOf(Warning.DuplicateSectionNames);
+        if (index > -1) {
+          warnings.splice(index, 1);
+        }
       }
     }
 
@@ -83,7 +122,7 @@
           </h1>
           <!--Warnings-->
           {#if warnings.length >= 1}
-            <div class="flex gap-3">
+            <div class="flex items-center gap-3">
               <Icon icon="ion:warning" class="h-6 w-6 text-yellow-400" />
               <ul>
                 {#each warnings as warning}
@@ -109,7 +148,7 @@
               <h4 class="sticky top-0 mb-2">Sections</h4>
               {#each eventData.metaData.sections as section}
                 <EditableCard
-                  title={section.displayName}
+                  bind:title={section.displayName}
                   titleName="Display Name"
                   titleEditable={true}
                   class="rounded-lg border border-slate-200 p-1 not-last:mb-2"
