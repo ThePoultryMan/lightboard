@@ -2,10 +2,11 @@
   import EditableCard from "$components/EditableCard.svelte";
   import OpenableCard from "$components/OpenableCard.svelte";
   import type { Event } from "$lib";
+  import { Warning } from "$lib/admin";
   import { getEventData } from "$lib/firebase";
   import { getUserInfo, type UserInfo } from "$lib/firebase/admin";
   import { sessionData } from "$lib/index.svelte";
-  import { ScoreType, ScoreTypes } from "$lib/scoring";
+  import { ScoreTypes } from "$lib/scoring";
   import Icon from "@iconify/svelte";
   import { onMount } from "svelte";
 
@@ -27,7 +28,33 @@
       };
     }
   });
+  let mergedParticipantNames = $derived.by(() => {
+    if (eventData) {
+      let participantNames = [];
+      for (const team of eventData.teams) {
+        for (const participant of team.participants) {
+          participantNames.push(participant.name);
+        }
+      }
+      return participantNames;
+    } else {
+      return [];
+    }
+  });
   let eventData: Event | undefined = $state();
+  let warnings: Warning[] = $derived.by(() => {
+    const warnings: Warning[] = [];
+    if (new Set(mergedParticipantNames).size !== mergedParticipantNames.length) {
+      warnings.push(Warning.DuplicateMembers);
+    } else {
+      const index = warnings.indexOf(Warning.DuplicateMembers);
+      if (index > -1) {
+        warnings.splice(index, 1);
+      }
+    }
+
+    return warnings;
+  });
 
   onMount(async () => {
     eventData = await getEventData(data.org, data.event);
@@ -38,10 +65,23 @@
   {#await currentUserInfo then userInfo}
     {#if userInfo.admins.includes(`${data.org}/${data.event}`)}
       {#if eventData}
-        <h1 class="mb-5 text-2xl font-semibold">
-          <span class="text-slate-400">{data.org}</span> <span class="text-slate-300">&gt;</span>
-          {eventData.metaData.displayName}
-        </h1>
+        <div class="mb-5 flex items-center gap-5">
+          <h1 class="my-2 text-2xl leading-none font-semibold">
+            <span class="text-slate-400">{data.org}</span> <span class="text-slate-300">&gt;</span>
+            {eventData.metaData.displayName}
+          </h1>
+          <!--Warnings-->
+          {#if warnings.length >= 1}
+            <div class="flex gap-3">
+              <Icon icon="ion:warning" class="h-6 w-6 text-yellow-400" />
+              <ul>
+                {#each warnings as warning}
+                  <li>{Warning.toString(warning)}</li>
+                {/each}
+              </ul>
+            </div>
+          {/if}
+        </div>
         <div class="flex gap-3">
           <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">
             <h3 class="text-lg">Metadata</h3>
