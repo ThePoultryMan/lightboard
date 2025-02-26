@@ -5,7 +5,7 @@
   import Header from "$components/Header.svelte";
   import { onMount } from "svelte";
   import { page } from "$app/state";
-  import { sessionData } from "$lib/index.svelte";
+  import { sessionData } from "$lib/state";
 
   let { children } = $props();
 
@@ -13,10 +13,10 @@
     let eventCode = page.url.searchParams.get("e");
     if (eventCode) {
       const split = eventCode.split("/");
-      sessionData.eventCode = {
-        org: split[0],
-        event: split[1],
-      };
+      sessionData.update((sessionData) => {
+        sessionData.eventCode = { org: split[0], event: split[1] };
+        return sessionData;
+      });
     }
   });
 </script>

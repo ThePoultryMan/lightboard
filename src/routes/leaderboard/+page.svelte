@@ -1,12 +1,27 @@
 <script lang="ts">
   import type { Event, Participant } from "$lib";
   import { getEventData } from "$lib/firebase";
-  import { sessionData } from "$lib/index.svelte.js";
+  import { sessionData, type EventCode } from "$lib/state.js";
   import { getTeamScores, sortLeaderboard } from "$lib/scoring/util";
   import { participantsIncludes } from "$lib/util";
-  import { onMount } from "svelte";
 
-  let data: Event | undefined = $state(undefined);
+  let eventCode: EventCode | undefined = $state();
+  sessionData.subscribe((data) => {
+    eventCode = data.eventCode;
+  });
+  let data: Event | undefined = $state();
+  let promisedData = $derived.by(() => {
+    if (eventCode) {
+      return getEventData(eventCode.org, eventCode.event);
+    } else {
+      return getEventData("example", "example-event-1");
+    }
+  });
+  $effect(() => {
+    promisedData.then((value) => {
+      data = value;
+    });
+  });
   let mergedParticipants = $derived.by(() => {
     if (!data) return [];
     const participants: Participant[] = [];
@@ -63,14 +78,6 @@
       return result;
     } else {
       return {};
-    }
-  });
-
-  onMount(async () => {
-    if (sessionData.eventCode) {
-      data = await getEventData(sessionData.eventCode.org, sessionData.eventCode.event);
-    } else {
-      data = await getEventData("example", "example-event-1");
     }
   });
 </script>

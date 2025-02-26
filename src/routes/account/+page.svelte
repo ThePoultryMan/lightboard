@@ -2,7 +2,7 @@
   import Link from "$components/Link.svelte";
   import { signIn } from "$lib/firebase";
   import { getUserInfo, type UserInfo } from "$lib/firebase/admin";
-  import { sessionData } from "$lib/index.svelte";
+  import { sessionData } from "$lib/state";
   import { onMount } from "svelte";
 
   // let turnstileLoaded = false;
