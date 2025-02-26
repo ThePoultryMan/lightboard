@@ -186,6 +186,7 @@
                   bind:title={team.meta.displayName}
                   titleEditable
                   titleName="Team Name"
+                  update={team.participants.length}
                 >
                   <div class="flex gap-3">
                     <p>Members:</p>

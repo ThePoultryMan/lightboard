@@ -1,6 +1,6 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import { onMount, type Snippet } from "svelte";
+  import { type Snippet } from "svelte";
 
   let {
     children,
@@ -8,25 +8,33 @@
     title = $bindable(),
     titleName,
     titleEditable = false,
+    update = $bindable(),
   }: {
     children?: Snippet;
     class?: string;
     title?: string;
     titleName?: string;
     titleEditable?: boolean;
+    update?: any;
   } = $props();
-  let div: Element;
+  let div: Element | undefined;
 
   let readOnly = $state(true);
-  let editableInputs: HTMLInputElement[] = [];
-  let editableSelects: HTMLSelectElement[] = [];
-  onMount(() => {
-    div.querySelectorAll(":scope input").forEach((element) => {
-      editableInputs.push(element as HTMLInputElement);
+  let editableInputs: HTMLInputElement[] = $derived.by(() => {
+    const ignored = update;
+    const inputs: HTMLInputElement[] = [];
+    div?.querySelectorAll(":scope input").forEach((element) => {
+      inputs.push(element as HTMLInputElement);
     });
-    div.querySelectorAll(":scope select").forEach((element) => {
-      editableSelects.push(element as HTMLSelectElement);
+    return inputs;
+  });
+  let editableSelects: HTMLSelectElement[] = $derived.by(() => {
+    const ignored = update;
+    const selects: HTMLSelectElement[] = [];
+    div?.querySelectorAll(":scope select").forEach((element) => {
+      selects.push(element as HTMLSelectElement);
     });
+    return selects;
   });
 
   $effect(() => {
