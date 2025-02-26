@@ -19,7 +19,6 @@
   });
   let division = $state(0);
   let section = $state(0);
-  // TODO: Iterate within divisions.
   let summedSectionScores = $derived.by(() => {
     if (!data?.metaData.sections || !data.metaData.divisions) return {};
     const summedSectionScores: any = {};
