@@ -17,4 +17,14 @@ button {
   .blue-link:hover {
     text-decoration: underline;
   }
+
+  input.editable-input select.editable-input {
+    border-radius: var(--radius-md);
+    border-color: var(--color-white);
+    padding: calc(var(--spacing) * 1);
+  }
+
+  input.editable-input:read-write select.editable-input:read-write {
+    border-width: 1px;
+  }
 }

@@ -7,7 +7,6 @@ export type Event = {
 
 export type EventMetaData = {
   displayName: string;
-  admins: String[]
   sections: Section[];
   divisions: Division[];
 };
@@ -18,7 +17,7 @@ export type Section = {
 };
 
 export type Division = {
-  displayName: String;
+  displayName: string;
   index: number;
   scoreStart: number;
   scoreDecrease: number;

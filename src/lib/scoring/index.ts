@@ -2,6 +2,7 @@ import type { TeamScore } from "$lib";
 
 export type Score = string | number | undefined;
 export type ScoreType = "Time" | "Highest" | "Lowest";
+export const ScoreTypes = ["Time", "Highest", "Lowest"];
 
 export function compareScores(a: TeamScore, b: TeamScore, scoreType: ScoreType) {
   switch (scoreType) {
