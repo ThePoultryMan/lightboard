@@ -1,6 +1,7 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
   import { type Snippet } from "svelte";
+  import AdminButton from "./AdminButton.svelte";
 
   let {
     children,
@@ -70,14 +71,9 @@
   {#if children}
     {@render children()}
   {/if}
-  <button
-    class="absolute right-0 bottom-0 z-10 flex h-6 w-6 items-center justify-center rounded-lg bg-neutral-700"
+  <AdminButton
+    type={readOnly ? "edit" : "confirm"}
     onclick={() => (readOnly = !readOnly)}
-  >
-    {#if readOnly}
-      <Icon icon="material-symbols:edit-outline" />
-    {:else}
-      <Icon icon="material-symbols:check-rounded" />
-    {/if}
-  </button>
+    class="absolute bottom-0 right-0"
+  />
 </div>

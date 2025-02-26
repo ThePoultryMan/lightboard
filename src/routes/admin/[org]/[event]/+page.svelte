@@ -1,4 +1,5 @@
 <script lang="ts">
+  import AdminButton from "$components/AdminButton.svelte";
   import EditableCard from "$components/EditableCard.svelte";
   import OpenableCard from "$components/OpenableCard.svelte";
   import type { Event } from "$lib";
@@ -230,12 +231,10 @@
                 >
                   <div class="flex gap-3">
                     <p>Members:</p>
-                    <button
-                      class="flex h-6 w-6 items-center justify-center rounded-lg bg-neutral-700"
+                    <AdminButton
+                      type="add"
                       onclick={() => team.participants.push({ name: "New Member", scores: [] })}
-                    >
-                      <Icon icon="material-symbols:add-2-rounded" />
-                    </button>
+                    ></AdminButton>
                   </div>
                   <ul class="list-dash ml-2 list-inside">
                     {#each team.participants as participant}
