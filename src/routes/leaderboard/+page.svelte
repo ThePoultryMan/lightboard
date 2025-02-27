@@ -88,9 +88,12 @@
 
 {#if data}
   <h1 class="mb-3.5 text-2xl font-semibold">{data.metaData.displayName}</h1>
-  <div class="mb-4 gap-3 md:grid md:grid-cols-3">
+  <!--Team Display-->
+  <div class={`mb-4 sm:flex sm:flex-wrap sm:justify-center md:gap-3`}>
     {#each data.teams as team}
-      <div class="mb-2.5 flex-1 rounded-lg bg-red-900 p-2 max-md:last:mb-4 md:mb-0">
+      <div
+        class={`mb-2.5 rounded-lg bg-red-900 p-2 max-md:last:mb-4 md:mb-0 ${data.teams.length >= 5 ? "md:w-<-1/3" : "md:w-<-1/2"}`}
+      >
         <!--Team Header-->
         <div class="mb-3 flex justify-between">
           <p class="text-xl">{team.meta.displayName}</p>
@@ -163,3 +166,15 @@
     </ol>
   </div>
 {/if}
+
+<style>
+  @media (width >= 48rem) {
+    .md\:w-\<-1\/2 {
+      width: calc(50% - 6px);
+    }
+
+    .md\:-w-1\<-\/3 {
+      width: calc(33% - 6px);
+    }
+  }
+</style>
