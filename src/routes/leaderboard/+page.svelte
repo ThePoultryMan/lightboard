@@ -80,13 +80,17 @@
       return {};
     }
   });
+  let teamDisplay: HTMLElement | undefined = $state();
+  const isScrollable = $derived(
+    teamDisplay ? teamDisplay.scrollWidth > teamDisplay.clientWidth : false,
+  );
 </script>
 
 {#if data}
   <h1 class="mb-3.5 text-2xl font-semibold">{data.metaData.displayName}</h1>
-  <div class="gap-3 md:flex">
+  <div class="mb-4 gap-3 md:grid md:grid-cols-3">
     {#each data.teams as team}
-      <div class="mb-2.5 flex-1 rounded-lg bg-red-900 p-2">
+      <div class="mb-2.5 flex-1 rounded-lg bg-red-900 p-2 max-md:last:mb-4 md:mb-0">
         <!--Team Header-->
         <div class="mb-3 flex justify-between">
           <p class="text-xl">{team.meta.displayName}</p>
@@ -99,20 +103,36 @@
         </div>
         <!--Section Display-->
         <div
-          class="flex h-44 items-end justify-evenly rounded-lg border-1 border-red-500 p-2.5 pb-0"
+          class={"flex h-44 items-end gap-4 overflow-x-scroll rounded-lg border-1 border-red-500 p-2.5 pb-0 " +
+            (isScrollable ? "justify-normal" : "justify-between")}
         >
-          {#each data.metaData.sections as section}
-            <div class="flex gap-3">
-              <div class="text-right">
-                <p>{section.displayName}</p>
-                <p class="font-bold">
-                  {summedSectionScores[team.meta.displayName][section.index]
-                    ? summedSectionScores[team.meta.displayName][section.index]
-                    : 0}
-                </p>
+          {#each data.metaData.sections as section, index}
+            <!--We have to use this twice so we only bind the first display-->
+            {#if index === 0}
+              <div class="flex w-28 shrink-0 gap-3" bind:this={teamDisplay}>
+                <div class="text-right">
+                  <p>{section.displayName}</p>
+                  <p class="font-bold">
+                    {summedSectionScores[team.meta.displayName][section.index]
+                      ? summedSectionScores[team.meta.displayName][section.index]
+                      : 0}
+                  </p>
+                </div>
+                <div class="w-5 shrink-0 rounded-t-md bg-red-500" style="height: 48px;"></div>
               </div>
-              <div class="w-5 rounded-t-md bg-red-500" style="height: 48px;"></div>
-            </div>
+            {:else}
+              <div class="flex w-28 shrink-0 gap-3">
+                <div class="text-right">
+                  <p>{section.displayName}</p>
+                  <p class="font-bold">
+                    {summedSectionScores[team.meta.displayName][section.index]
+                      ? summedSectionScores[team.meta.displayName][section.index]
+                      : 0}
+                  </p>
+                </div>
+                <div class="w-5 shrink-0 rounded-t-md bg-red-500" style="height: 48px;"></div>
+              </div>
+            {/if}
           {/each}
         </div>
       </div>
