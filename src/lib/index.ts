@@ -1,4 +1,4 @@
-import type { Score, ScoreType } from "./scoring";
+import { ScoreType, type Score } from "./scoring";
 
 export type Event = {
   metaData: EventMetaData;
@@ -26,7 +26,7 @@ export type Division = {
 export type TeamData = {
   meta: {
     displayName: string;
-    id: string,
+    id: string;
   };
   participants: Participant[];
 };
@@ -59,4 +59,15 @@ export function emptyEvent() {
     },
     teams: [],
   } as Event;
+}
+
+export namespace ScoreData {
+  export function empty(section: number): ScoreData {
+    return {
+      section,
+      division: 0,
+      scoreType: "Time",
+      score: undefined,
+    };
+  }
 }

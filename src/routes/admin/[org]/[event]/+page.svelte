@@ -2,7 +2,7 @@
   import AdminButton from "$components/AdminButton.svelte";
   import EditableCard from "$components/EditableCard.svelte";
   import OpenableCard from "$components/OpenableCard.svelte";
-  import type { Event } from "$lib";
+  import { ScoreData, type Event } from "$lib";
   import { Warning } from "$lib/admin";
   import { getEventData, getUser } from "$lib/firebase";
   import { getUserInfo, saveEventData, type UserInfo } from "$lib/firebase/admin";
@@ -208,67 +208,84 @@
             {/each}
           </div>
         </div>
-        <div class="basis-3/5 rounded-lg bg-neutral-800 p-2">
+        <div class="basis-3/5 overflow-scroll rounded-lg bg-neutral-800 p-2">
           <h2 class="text-lg">Scores</h2>
-          <table class="w-full border">
-            <thead>
-              <tr>
-                <th>Name</th>
-                {#each eventData.metaData.sections as section}
-                  <th>{section.displayName}</th>
-                {/each}
-              </tr>
-            </thead>
-            <tbody>
-              {#each eventData.teams as team}
-                {#each team.participants as participant, index}
-                  <tr>
-                    <td>{participant.name}</td>
-                    {#each participant.scores as score}
-                      <td>
-                        <EditableCard>
-                          <div>
-                            <label for={"score" + participant.name + index}>Score: </label>
-                            <input
-                              type="text"
-                              id={"score" + participant.name + index}
-                              class="editable-input"
-                              bind:value={score.score}
-                              readonly
+          <div class="overflow-scroll">
+            <table class="w-full border">
+              <thead>
+                <tr>
+                  <th class="w-40 p-1.5">Name</th>
+                  {#each eventData.metaData.sections as section}
+                    <th class="w-56 max-w-56 min-w-56 p-1.5">{section.displayName}</th>
+                  {/each}
+                </tr>
+              </thead>
+              <tbody>
+                {#each eventData.teams as team}
+                  {#each team.participants as participant}
+                    <tr class="odd:bg-neutral-900">
+                      <td class="p-1.5">{participant.name}</td>
+                      {#each eventData.metaData.sections as section, index}
+                        {#if participant.scores[index]}
+                          <td class="p-1.5">
+                            <EditableCard class="rounded-lg border border-slate-200 p-1.5">
+                              <div>
+                                <label for={"score" + participant.name + index}>Score: </label>
+                                <input
+                                  type="text"
+                                  id={"score" + participant.name + index}
+                                  class="editable-input w-20"
+                                  bind:value={participant.scores[index].score}
+                                  readonly
+                                />
+                              </div>
+                              <div>
+                                <label for={"division" + participant.name + index}
+                                  >Division:
+                                </label>
+                                <select
+                                  id={"division" + participant.name + index}
+                                  bind:value={participant.scores[index].division}
+                                  disabled
+                                >
+                                  {#each eventData.metaData.divisions as division}
+                                    <option value={division.index}>{division.displayName}</option>
+                                  {/each}
+                                </select>
+                              </div>
+                              <div>
+                                <label for={"scoreType" + participant.name + index}
+                                  >Score Type:
+                                </label>
+                                <select
+                                  id={"scoreType" + participant.name + index}
+                                  bind:value={participant.scores[index].scoreType}
+                                  disabled
+                                >
+                                  {#each ScoreTypes as scoreType}
+                                    <option>{scoreType}</option>
+                                  {/each}
+                                </select>
+                              </div>
+                            </EditableCard>
+                          </td>
+                        {:else}
+                          <td class="p-1.5">
+                            <AdminButton
+                              type="add"
+                              onclick={() =>
+                                (participant.scores[index] = ScoreData.empty(section.index))}
+                              class="mx-auto"
                             />
-                          </div>
-                          <div>
-                            <label for={"division" + participant.name + index}>Division: </label>
-                            <select
-                              id={"division" + participant.name + index}
-                              bind:value={score.division}
-                              disabled
-                            >
-                              {#each eventData.metaData.divisions as division}
-                                <option value={division.index}>{division.displayName}</option>
-                              {/each}
-                            </select>
-                          </div>
-                          <div>
-                            <label for={"scoreType" + participant.name + index}>Score Type: </label>
-                            <select
-                              id={"scoreType" + participant.name + index}
-                              bind:value={score.scoreType}
-                              disabled
-                            >
-                              {#each ScoreTypes as scoreType}
-                                <option>{scoreType}</option>
-                              {/each}
-                            </select>
-                          </div>
-                        </EditableCard>
-                      </td>
-                    {/each}
-                  </tr>
+                          </td>
+                        {/if}
+                      {/each}
+                    </tr>
+                  {/each}
                 {/each}
-              {/each}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
         <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">
           <h2 class="text-lg">Teams</h2>
