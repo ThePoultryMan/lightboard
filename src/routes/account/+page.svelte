@@ -1,6 +1,6 @@
 <script lang="ts">
   import Link from "$components/Link.svelte";
-  import { signIn } from "$lib/firebase";
+  import { signIn, type User } from "$lib/firebase";
   import { getUserInfo, type UserInfo } from "$lib/firebase/admin";
   import { sessionData } from "$lib/state";
   import { onMount } from "svelte";
@@ -11,14 +11,25 @@
   let email = $state("");
   let password = $state("");
 
-  let currentUserInfo: Promise<UserInfo> = $derived.by(async () => {
-    if (sessionData.user) {
-      return await getUserInfo(sessionData.user.user.uid);
+  let user: User | undefined = $state();
+  sessionData.subscribe((data) => data.user);
+  let userInfo: Promise<UserInfo> = $derived.by(async () => {
+    if (user) {
+      return getUserInfo(user.user.uid);
     } else {
       return {
         admins: [],
       };
     }
+  });
+
+  $effect(() => {
+    sessionData.update((data) => {
+      if (user) {
+        data.user = user;
+      }
+      return data;
+    });
   });
 
   onMount(() => {
@@ -37,17 +48,17 @@
     event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement },
   ) {
     event.preventDefault();
-    sessionData.user = await signIn(email, password);
+    user = await signIn(email, password);
   }
 </script>
 
-{#if sessionData.user}
-  <h1 class="mb-5 text-2xl font-semibold">Welcome, {sessionData.user.user.displayName}</h1>
+{#if user}
+  <h1 class="mb-5 text-2xl font-semibold">Welcome, {user.user.displayName}</h1>
   <h2 class="mb-2 text-xl">Your Events:</h2>
   <div class="flex">
-    {#await currentUserInfo then adminInfo}
+    {#await userInfo then adminInfo}
       {#each adminInfo.admins as fullEventPath}
-        <Link href={`/admin/${fullEventPath}`}>
+        <Link href={`/admin/${fullEventPath}`} class="not-last:mr-5">
           <div class="rounded-md bg-neutral-800 p-2.5">{fullEventPath}</div>
         </Link>
       {/each}
