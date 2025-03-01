@@ -10,7 +10,7 @@ import {
 } from "$env/static/public";
 import { getAuth as getFirebaseAuth, signInWithEmailAndPassword, type Auth, type UserCredential } from "firebase/auth";
 import { collection, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
-import { emptyEvent, type EventMetaData, type TeamData } from "$lib";
+import { emptyEvent, type Event, type EventMetaData, type TeamData } from "$lib";
 import { sortByIndex } from "$lib/util";
 
 export interface User extends UserCredential {

@@ -41,12 +41,14 @@ export type ScoreData = {
   division: number;
   scoreType: ScoreType;
   score: Score;
+  bonusPoints: number;
 };
 
 export type TeamScore = {
   name: String;
   score: Score;
   adjustedScore: number;
+  bonusPoints: number,
 };
 
 export function emptyEvent() {
@@ -68,6 +70,7 @@ export namespace ScoreData {
       division: 0,
       scoreType: "Time",
       score: undefined,
+      bonusPoints: 0,
     };
   }
 }

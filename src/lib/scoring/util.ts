@@ -1,11 +1,7 @@
 import type { Division, Participant, TeamScore } from "$lib";
 import { compareScores, type SortableScore } from ".";
 
-export function getTeamScores(
-  scores: SortableScore[],
-  section: number,
-  division: Division,
-): TeamScore[] {
+export function getTeamScores(scores: SortableScore[], division: Division): TeamScore[] {
   const teamScores: TeamScore[] = [];
   scores.sort((a, b) => {
     return compareScores(a, b);
@@ -16,6 +12,7 @@ export function getTeamScores(
       name: score.name,
       score: score.score,
       adjustedScore: division.scoreStart - division.scoreDecrease * index,
+      bonusPoints: score.bonusPoints,
     });
   });
 
@@ -40,6 +37,7 @@ export function getSortableScores(
         name: participant.name,
         score: participant.scores[section].score,
         scoreType: participant.scores[section].scoreType,
+        bonusPoints: participant.scores[section].bonusPoints ? participant.scores[section].bonusPoints : 0,
       });
     });
   return sortableScores;

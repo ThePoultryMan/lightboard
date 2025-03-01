@@ -5,6 +5,7 @@ export type SortableScore = {
   name: string,
   score: Score,
   scoreType: ScoreType,
+  bonusPoints: number,
 }
 export type ScoreType = "Time" | "Highest" | "Lowest";
 export const ScoreTypes = ["Time", "Highest", "Lowest"];

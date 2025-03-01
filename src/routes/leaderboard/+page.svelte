@@ -37,22 +37,17 @@
   let summedSectionScores = $derived.by(() => {
     if (!data?.metaData.sections || !data.metaData.divisions) return {};
     const summedSectionScores: any = {};
-    const allParticipant: Participant[] = [];
-    for (const team of data?.teams) {
-      allParticipant.push(...team.participants);
-    }
     data?.teams.forEach((team) => {
       for (const section of data?.metaData.sections!) {
         if (team.participants) {
           let sum = 0;
           for (const division of data?.metaData.divisions!) {
             getTeamScores(
-              getSortableScores(allParticipant, section.index, division),
-              section.index,
+              getSortableScores(mergedParticipants, section.index, division),
               division,
             ).forEach((teamScore) => {
               if (participantsIncludes(team.participants, teamScore)) {
-                sum += teamScore.adjustedScore;
+                sum += teamScore.adjustedScore + teamScore.bonusPoints;
               }
             });
           }
@@ -161,10 +156,12 @@
       </select>
     </div>
     <ol class="list-inside list-decimal">
-      {#each getTeamScores(getSortableScores(mergedParticipants, section, data.metaData.divisions[division]), section, data.metaData.divisions[division]) as teamScore}
+      {#each getTeamScores(getSortableScores(mergedParticipants, section, data.metaData.divisions[division]), data.metaData.divisions[division]) as teamScore}
         <li>
           {teamScore.name}: {teamScore.score} <span class="mx-3">-</span>
-          {teamScore.adjustedScore} Team Points
+          {teamScore.adjustedScore} Team Points {teamScore.bonusPoints
+            ? `(+${teamScore.bonusPoints} Bonus point${teamScore.bonusPoints > 1 ? "s" : ""})`
+            : ""}
         </li>
       {/each}
     </ol>

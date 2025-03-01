@@ -240,9 +240,19 @@
                                 />
                               </div>
                               <div>
-                                <label for={"division" + participant.name + index}
-                                  >Division:
+                                <label for={"bonusPoints" + participant.name + index}
+                                  >Bonus points:
                                 </label>
+                                <input
+                                  type="number"
+                                  id={"bonusPoints" + participant.name + index}
+                                  class="editable-input w-14"
+                                  bind:value={participant.scores[index].bonusPoints}
+                                  readonly
+                                />
+                              </div>
+                              <div>
+                                <label for={"division" + participant.name + index}>Division:</label>
                                 <select
                                   id={"division" + participant.name + index}
                                   bind:value={participant.scores[index].division}
