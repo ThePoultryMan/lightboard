@@ -2,7 +2,7 @@
   import type { Event, Participant } from "$lib";
   import { getEventData } from "$lib/firebase";
   import { sessionData, type EventCode } from "$lib/state.js";
-  import { getTeamScores, sortLeaderboard } from "$lib/scoring/util";
+  import { getSortableScores, getTeamScores } from "$lib/scoring/util";
   import { participantsIncludes } from "$lib/util";
 
   let eventCode: EventCode | undefined = $state();
@@ -46,7 +46,11 @@
         if (team.participants) {
           let sum = 0;
           for (const division of data?.metaData.divisions!) {
-            getTeamScores(allParticipant, section.index, division).forEach((teamScore) => {
+            getTeamScores(
+              getSortableScores(allParticipant, section.index, division),
+              section.index,
+              division,
+            ).forEach((teamScore) => {
               if (participantsIncludes(team.participants, teamScore)) {
                 sum += teamScore.adjustedScore;
               }
@@ -157,10 +161,10 @@
       </select>
     </div>
     <ol class="list-inside list-decimal">
-      {#each sortLeaderboard(getTeamScores(mergedParticipants, section, data.metaData.divisions[division])) as sectionScore}
+      {#each getTeamScores(getSortableScores(mergedParticipants, section, data.metaData.divisions[division]), section, data.metaData.divisions[division]) as teamScore}
         <li>
-          {sectionScore.name}: {sectionScore.scoreData.score} <span class="mx-3">-</span>
-          {sectionScore.adjustedScore} Team Points
+          {teamScore.name}: {teamScore.score} <span class="mx-3">-</span>
+          {teamScore.adjustedScore} Team Points
         </li>
       {/each}
     </ol>

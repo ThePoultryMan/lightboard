@@ -1,19 +1,33 @@
 import type { Division, Participant, TeamScore } from "$lib";
-import { compareScores } from ".";
-
-export function sortLeaderboard(participants: TeamScore[]): TeamScore[] {
-  if (participants && participants.length <= 1) return participants;
-  return participants.sort((a, b) => {
-    return compareScores(a, b, a.scoreData.scoreType);
-  });
-}
+import { compareScores, type SortableScore } from ".";
 
 export function getTeamScores(
-  participants: Participant[],
+  scores: SortableScore[],
   section: number,
   division: Division,
 ): TeamScore[] {
-  let sectionScores: TeamScore[] = [];
+  const teamScores: TeamScore[] = [];
+  scores.sort((a, b) => {
+    return compareScores(a, b);
+  });
+
+  scores.forEach((score, index) => {
+    teamScores.push({
+      name: score.name,
+      score: score.score,
+      adjustedScore: division.scoreStart - division.scoreDecrease * index,
+    });
+  });
+
+  return teamScores;
+}
+
+export function getSortableScores(
+  participants: Participant[],
+  section: number,
+  division: Division,
+): SortableScore[] {
+  let sortableScores: SortableScore[] = [];
   participants
     .filter(
       (participant) =>
@@ -22,11 +36,11 @@ export function getTeamScores(
         participant.scores[section].division === division.index,
     )
     .forEach((participant, index) => {
-      sectionScores.push({
+      sortableScores.push({
         name: participant.name,
-        scoreData: participant.scores[section],
-        adjustedScore: division.scoreStart - division.scoreDecrease * index,
+        score: participant.scores[section].score,
+        scoreType: participant.scores[section].scoreType,
       });
     });
-  return sectionScores;
+  return sortableScores;
 }

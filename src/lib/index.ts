@@ -45,7 +45,7 @@ export type ScoreData = {
 
 export type TeamScore = {
   name: String;
-  scoreData: ScoreData;
+  score: Score;
   adjustedScore: number;
 };
 
