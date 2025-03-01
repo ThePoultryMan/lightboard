@@ -40,6 +40,8 @@
       return [];
     }
   });
+  let information: "saving" | "saving-failure" | "saved" | "peak-error" | undefined = $state();
+  let saveError: string | undefined = $state();
   // TODO: Make warning system not god awful like it is now.
   let warnings: Warning[] = $derived.by(() => {
     const warnings: Warning[] = [];
@@ -98,19 +100,58 @@
   });
 
   async function save() {
-    console.log("saving...");
-    const saved = await saveEventData(data.org, data.event, eventData);
-    if (saved) {
-      alert("Data has been saved");
+    information = "saving";
+    const result = await saveEventData(data.org, data.event, eventData);
+    if (result.saved) {
+      information = "saved";
     } else {
-      alert("Data was *NOT* saved.");
+      information = "saving-failure";
+      saveError = result.error;
     }
+  }
+
+  function dismiss() {
+    information = undefined;
   }
 </script>
 
 {#if user}
   {#if user.admins.includes(`${data.org}/${data.event}`)}
     {#if eventData}
+      <!--Information Cover-->
+      {#if information}
+        <div
+          class="absolute top-0 left-0 z-20 flex h-dvh w-dvw items-center justify-center bg-[rgba(30,41,57,.7)]"
+        >
+          {#if information === "saving"}
+            <Icon icon="line-md:loading-twotone-loop" class="h-24 w-24" />
+          {:else if information === "saved"}
+            <div class="rounded-lg bg-gray-800 p-5 text-center">
+              <p class="mb-3 text-2xl">Saved!</p>
+              <button onclick={dismiss} class="rounded-lg bg-neutral-700 px-3 py-1.5">
+                Dismiss
+              </button>
+            </div>
+          {:else}
+            <div class="rounded-lg bg-gray-800 p-5 text-center">
+              <p class="mb-3 text-2xl">Failed to Save</p>
+              {#if (information === "peak-error")}
+                <p class="mb-3">{saveError}</p>
+              {/if}
+              <button
+                onclick={() => (information = "peak-error")}
+                class="mr-2 rounded-lg bg-neutral-700 px-3 py-1.5"
+              >
+                View Error
+              </button>
+              <button onclick={dismiss} class="rounded-lg bg-neutral-700 px-3 py-1.5">
+                Dismiss
+              </button>
+            </div>
+          {/if}
+        </div>
+      {/if}
+
       <div class="mb-5 flex items-center justify-between gap-5">
         <h1 class="my-2 text-2xl leading-none font-semibold">
           <span class="text-slate-400">{data.org}</span> <span class="text-slate-300">&gt;</span>

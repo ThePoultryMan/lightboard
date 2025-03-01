@@ -5,6 +5,10 @@ import type { Event } from "$lib";
 export type UserInfo = {
   admins: string[];
 };
+export type SaveResult = {
+  saved: boolean;
+  error?: string;
+};
 
 export async function getUserInfo(uid: string) {
   getFirebaseApp();
@@ -13,17 +17,42 @@ export async function getUserInfo(uid: string) {
   return docReference.data() as UserInfo;
 }
 
-export async function saveEventData(org: string, event: string, eventData: Event | undefined) {
+export async function saveEventData(
+  org: string,
+  event: string,
+  eventData: Event | undefined,
+): Promise<SaveResult> {
   if (eventData) {
     getFirebaseApp();
     const firestore = getFirestore();
     const collectionPath = `/orgs/${org}/${event}`;
 
-    await setDoc(doc(firestore, collectionPath, "meta"), eventData.metaData);
+    try {
+      await setDoc(doc(firestore, collectionPath, "meta"), eventData.metaData);
+    } catch (error: any) {
+      return {
+        saved: false,
+        error: error.toString(),
+      };
+    }
     for (const team of eventData.teams) {
-      await setDoc(doc(firestore, collectionPath, team.meta.id), team)
+      try {
+        await setDoc(doc(firestore, collectionPath, team.meta.id), team);
+      } catch (error: any) {
+        return {
+          saved: false,
+          error: error.toString(),
+        };
+      }
     }
 
-    return true;
+    return {
+      saved: true,
+    };
+  } else {
+    return {
+      saved: false,
+      error: "No event data was provided.",
+    };
   }
 }
