@@ -36,7 +36,7 @@ export type Participant = {
   scores: ScoreData[];
 };
 
-export type ScoreData = {
+export interface ScoreData {
   section: number;
   division: number;
   scoreType: ScoreType;

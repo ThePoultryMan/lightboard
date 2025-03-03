@@ -2,9 +2,9 @@
   import AdminButton from "$components/AdminButton.svelte";
   import EditableCard from "$components/EditableCard.svelte";
   import OpenableCard from "$components/OpenableCard.svelte";
-  import { ScoreData, type Event } from "$lib";
+  import { ScoreData, type Event, type Participant } from "$lib";
   import { Warning } from "$lib/admin";
-  import { getEventData, getUser } from "$lib/firebase";
+  import { getEventData } from "$lib/firebase";
   import { getUserInfo, saveEventData, type UserInfo } from "$lib/firebase/admin";
   import { sessionData } from "$lib/state";
   import { ScoreTypes } from "$lib/scoring";
@@ -42,6 +42,7 @@
   });
   let information: "saving" | "saving-failure" | "saved" | "peak-error" | undefined = $state();
   let saveError: string | undefined = $state();
+  let newestScore: string | undefined = $state();
   // TODO: Make warning system not god awful like it is now.
   let warnings: Warning[] = $derived.by(() => {
     const warnings: Warning[] = [];
@@ -112,6 +113,11 @@
 
   function dismiss() {
     information = undefined;
+  }
+
+  function addNewScore(participant: Participant, section: number) {
+    participant.scores[section] = ScoreData.empty(section);
+    newestScore = participant.name + section;
   }
 </script>
 
@@ -269,63 +275,70 @@
                       {#each eventData.metaData.sections as section, index}
                         {#if participant.scores[index]}
                           <td class="p-1.5">
-                            <EditableCard class="rounded-lg border border-slate-200 p-1.5">
-                              <div>
-                                <label for={"score" + participant.name + index}>Score: </label>
-                                <input
-                                  type="text"
-                                  id={"score" + participant.name + index}
-                                  class="editable-input w-20"
-                                  bind:value={participant.scores[index].score}
-                                  readonly
-                                />
-                              </div>
-                              <div>
-                                <label for={"bonusPoints" + participant.name + index}
-                                  >Bonus points:
-                                </label>
-                                <input
-                                  type="number"
-                                  id={"bonusPoints" + participant.name + index}
-                                  class="editable-input w-14"
-                                  bind:value={participant.scores[index].bonusPoints}
-                                  readonly
-                                />
-                              </div>
-                              <div>
-                                <label for={"division" + participant.name + index}>Division:</label>
-                                <select
-                                  id={"division" + participant.name + index}
-                                  bind:value={participant.scores[index].division}
-                                  disabled
-                                >
-                                  {#each eventData.metaData.divisions as division}
-                                    <option value={division.index}>{division.displayName}</option>
-                                  {/each}
-                                </select>
-                              </div>
-                              <div>
-                                <label for={"scoreType" + participant.name + index}
-                                  >Score Type:
-                                </label>
-                                <select
-                                  id={"scoreType" + participant.name + index}
-                                  bind:value={participant.scores[index].scoreType}
-                                  disabled
-                                >
-                                  {#each ScoreTypes as scoreType}
-                                    <option>{scoreType}</option>
-                                  {/each}
-                                </select>
-                              </div>
-                            </EditableCard>
+                            <OpenableCard
+                            min-height="1.5rem"
+                            class="rounded-lg border border-slate-200 p-1.5"
+                            start-open={newestScore === participant.name + index}
+                            >
+                              <EditableCard>
+                                <div>
+                                  <label for={"score" + participant.name + index}>Score: </label>
+                                  <input
+                                    type="text"
+                                    id={"score" + participant.name + index}
+                                    class="editable-input w-20"
+                                    bind:value={participant.scores[index].score}
+                                    readonly
+                                  />
+                                </div>
+                                <div>
+                                  <label for={"bonusPoints" + participant.name + index}
+                                    >Bonus points:
+                                  </label>
+                                  <input
+                                    type="number"
+                                    id={"bonusPoints" + participant.name + index}
+                                    class="editable-input w-14"
+                                    bind:value={participant.scores[index].bonusPoints}
+                                    readonly
+                                  />
+                                </div>
+                                <div>
+                                  <label for={"division" + participant.name + index}
+                                    >Division:</label
+                                  >
+                                  <select
+                                    id={"division" + participant.name + index}
+                                    bind:value={participant.scores[index].division}
+                                    disabled
+                                  >
+                                    {#each eventData.metaData.divisions as division}
+                                      <option value={division.index}>{division.displayName}</option>
+                                    {/each}
+                                  </select>
+                                </div>
+                                <div>
+                                  <label for={"scoreType" + participant.name + index}
+                                    >Score Type:
+                                  </label>
+                                  <select
+                                    id={"scoreType" + participant.name + index}
+                                    bind:value={participant.scores[index].scoreType}
+                                    disabled
+                                  >
+                                    {#each ScoreTypes as scoreType}
+                                      <option>{scoreType}</option>
+                                    {/each}
+                                  </select>
+                                </div>
+                              </EditableCard>
+                            </OpenableCard>
                           </td>
                         {:else}
                           <td class="p-1.5">
                             <AdminButton
                               type="add"
-                              onclick={() =>
-                                (participant.scores[index] = ScoreData.empty(section.index))}
+                              onclick={() => addNewScore(participant, section.index)}
                               class="mx-auto"
                             />
                           </td>

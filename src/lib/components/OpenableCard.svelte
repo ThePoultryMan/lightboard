@@ -5,10 +5,16 @@
   let {
     children,
     class: className,
+    "start-open": startOpen = false,
     "min-height": minHeight = "1.5rem",
-  }: { children: Snippet; class?: string; "min-height"?: string } = $props();
+  }: {
+    children: Snippet;
+    class?: string;
+    "start-open"?: boolean;
+    "min-height"?: string;
+  } = $props();
 
-  let open = $state(false);
+  let open = $state(startOpen);
 </script>
 
 <div class={"flex w-full items-start gap-2" + (className ? " " + className : "")}>
