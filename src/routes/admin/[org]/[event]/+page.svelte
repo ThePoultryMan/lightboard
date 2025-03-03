@@ -135,7 +135,7 @@
           {:else}
             <div class="rounded-lg bg-gray-800 p-5 text-center">
               <p class="mb-3 text-2xl">Failed to Save</p>
-              {#if (information === "peak-error")}
+              {#if information === "peak-error"}
                 <p class="mb-3">{saveError}</p>
               {/if}
               <button
@@ -177,7 +177,7 @@
           Save
         </button>
       </div>
-      <div class="flex gap-3">
+      <div class="flex items-start gap-3">
         <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">
           <h3 class="text-lg">Metadata</h3>
           <div>
