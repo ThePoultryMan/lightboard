@@ -5,6 +5,7 @@
   import { getSortableScores, getTeamScores } from "$lib/scoring/util";
   import { participantsIncludes } from "$lib/util";
   import type { PageProps } from "./$types";
+  import PointBar from "$components/PointBar.svelte";
 
   const { data }: PageProps = $props();
   let eventCode: EventCode | undefined = $state();
@@ -43,20 +44,28 @@
       for (const section of eventData?.metaData.sections!) {
         if (team.participants) {
           let sum = 0;
+          let bonusPoints = 0;
           for (const division of eventData?.metaData.divisions!) {
             getTeamScores(
               getSortableScores(mergedParticipants, section.index, division),
               division,
             ).forEach((teamScore) => {
               if (participantsIncludes(team.participants, teamScore)) {
-                sum += teamScore.adjustedScore + teamScore.bonusPoints;
+                sum += teamScore.adjustedScore;
+                bonusPoints += teamScore.bonusPoints;
               }
             });
           }
           summedSectionScores[team.meta.displayName] = summedSectionScores[team.meta.displayName]
             ? summedSectionScores[team.meta.displayName]
             : {};
-          summedSectionScores[team.meta.displayName][section.index] = sum;
+          summedSectionScores[team.meta.displayName][section.index] = summedSectionScores[
+            team.meta.displayName
+          ][section.index]
+            ? summedSectionScores[team.meta.displayName][section.index]
+            : {};
+          summedSectionScores[team.meta.displayName][section.index].score = sum;
+          summedSectionScores[team.meta.displayName][section.index].bonusPoints = bonusPoints;
         } else {
           summedSectionScores[team.meta.displayName] = {};
           summedSectionScores[team.meta.displayName][section.index] = 0;
@@ -71,7 +80,9 @@
       for (const team of Object.keys(summedSectionScores)) {
         let sum = 0;
         for (const section of Object.keys(summedSectionScores[team])) {
-          sum += summedSectionScores[team][section];
+          sum +=
+            summedSectionScores[team][section].score +
+            summedSectionScores[team][section].bonusPoints;
         }
         result[team] = sum;
       }
@@ -116,29 +127,18 @@
           {#each eventData.metaData.sections as section, index}
             <!--We have to use this twice so we only bind the first display-->
             {#if index === 0}
-              <div class="flex w-28 shrink-0 gap-3" bind:this={teamDisplay}>
-                <div class="text-right">
-                  <p>{section.displayName}</p>
-                  <p class="font-bold">
-                    {summedSectionScores[team.meta.displayName][section.index]
-                      ? summedSectionScores[team.meta.displayName][section.index]
-                      : 0}
-                  </p>
-                </div>
-                <div class="w-5 shrink-0 rounded-t-md bg-red-500" style="height: 48px;"></div>
-              </div>
+              <PointBar
+                name={section.displayName}
+                points={summedSectionScores[team.meta.displayName][section.index].score}
+                bonusPoints={summedSectionScores[team.meta.displayName][section.index].bonusPoints}
+                bind:thisBind={teamDisplay}
+              />
             {:else}
-              <div class="flex w-28 shrink-0 gap-3">
-                <div class="text-right">
-                  <p>{section.displayName}</p>
-                  <p class="font-bold">
-                    {summedSectionScores[team.meta.displayName][section.index]
-                      ? summedSectionScores[team.meta.displayName][section.index]
-                      : 0}
-                  </p>
-                </div>
-                <div class="w-5 shrink-0 rounded-t-md bg-red-500" style="height: 48px;"></div>
-              </div>
+              <PointBar
+                name={section.displayName}
+                points={summedSectionScores[team.meta.displayName][section.index].score}
+                bonusPoints={summedSectionScores[team.meta.displayName][section.index].bonusPoints}
+              />
             {/if}
           {/each}
         </div>
