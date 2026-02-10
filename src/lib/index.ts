@@ -1,6 +1,6 @@
 import { ScoreType, type Score } from "./scoring";
 
-export type Event = {
+export type EventData = {
   metaData: EventMetaData;
   teams: TeamData[];
 };
@@ -60,7 +60,7 @@ export function emptyEvent() {
       divisions: [],
     },
     teams: [],
-  } as Event;
+  } as EventData;
 }
 
 export namespace ScoreData {

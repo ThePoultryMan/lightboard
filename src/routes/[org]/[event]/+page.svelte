@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Event, Participant } from "$lib";
-  import { getEventData } from "$lib/firebase";
+  import type { EventData, Participant } from "$lib";
+  import { getEventData } from "$lib/server/firebase";
   import { sessionData, type EventCode } from "$lib/state.js";
   import { getSortableScores, getTeamScores } from "$lib/scoring/util";
   import { participantsIncludes } from "$lib/util";
@@ -12,7 +12,7 @@
   sessionData.subscribe((sessionData) => {
     eventCode = sessionData.eventCode;
   });
-  let eventData: Event | undefined = $state();
+  let eventData: EventData | undefined = $state();
   let promisedData = $derived.by(() => {
     if (eventCode) {
       return getEventData(eventCode.org, eventCode.event);

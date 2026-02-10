@@ -8,9 +8,14 @@ import {
   PUBLIC_PROJECT_ID,
   PUBLIC_STORAGE_BUCKET,
 } from "$env/static/public";
-import { getAuth as getFirebaseAuth, signInWithEmailAndPassword, type Auth, type UserCredential } from "firebase/auth";
+import {
+  getAuth as getFirebaseAuth,
+  signInWithEmailAndPassword,
+  type Auth,
+  type UserCredential,
+} from "firebase/auth";
 import { collection, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
-import { emptyEvent, type Event, type EventMetaData, type TeamData } from "$lib";
+import { emptyEvent, type EventData, type EventMetaData, type TeamData } from "$lib";
 import { sortByIndex } from "$lib/util";
 
 export interface User extends UserCredential {
@@ -26,8 +31,6 @@ const firebaseConfig: FirebaseOptions = {
   appId: PUBLIC_APP_ID,
 };
 let firebaseApp: FirebaseApp | undefined;
-let auth: Auth;
-let user: User | undefined;
 
 export function getFirebaseApp() {
   if (!firebaseApp) {
@@ -47,7 +50,7 @@ export function getUser() {
   return getAuth().currentUser;
 }
 
-export async function getEventData(org: string, event: string) {
+export async function getEventData(org: string, event: string): Promise<EventData> {
   const firestore = getFirestore(getFirebaseApp());
   const collectionPath = `/orgs/${org}/${event}`;
 
@@ -67,14 +70,9 @@ export async function getEventData(org: string, event: string) {
   return eventData;
 }
 
-export async function signIn(email: string, password: string) {
-  if (!user) {
-    getFirebaseApp();
-    auth = getAuth();
+export async function signIn(email: string, password: string): Promise<User> {
+  getFirebaseApp();
+  const auth = getAuth();
 
-    user = (await signInWithEmailAndPassword(auth, email, password)) as User;
-    return user;
-  } else {
-    return user;
-  }
+  return (await signInWithEmailAndPassword(auth, email, password)) as User;
 }

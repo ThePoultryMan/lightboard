@@ -1,4 +1,4 @@
-import type { User } from "$lib/firebase/index";
+import type { User } from "$lib/server/firebase/index";
 import { writable, type Writable } from "svelte/store";
 
 export type EventCode = {

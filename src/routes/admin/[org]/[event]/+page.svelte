@@ -1,15 +1,16 @@
+<!--TODO: split this into smaller components-->
 <script lang="ts">
   import AdminButton from "$components/AdminButton.svelte";
   import EditableCard from "$components/EditableCard.svelte";
   import OpenableCard from "$components/OpenableCard.svelte";
-  import { ScoreData, type Event, type Participant } from "$lib";
+  import { ScoreData, type EventData, type Participant } from "$lib";
   import { Warning } from "$lib/admin";
-  import { getEventData } from "$lib/firebase";
-  import { getUserInfo, saveEventData, type UserInfo } from "$lib/firebase/admin";
+  import { type UserInfo } from "$lib/server/firebase/admin";
   import { sessionData } from "$lib/state";
   import { ScoreTypes } from "$lib/scoring";
   import Icon from "@iconify/svelte";
   import { onMount } from "svelte";
+  import { getEventData, getUserInfo, saveEventData } from "$lib/api";
 
   let {
     data,
@@ -26,7 +27,7 @@
       user = await getUserInfo(data.user.user.uid);
     }
   });
-  let eventData: Event | undefined = $state();
+  let eventData: EventData | undefined = $state();
   let mergedParticipantNames = $derived.by(() => {
     if (eventData) {
       let participantNames = [];

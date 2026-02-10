@@ -1,7 +1,8 @@
 <script lang="ts">
   import Link from "$components/Link.svelte";
-  import { signIn, type User } from "$lib/firebase";
-  import { getUserInfo, type UserInfo } from "$lib/firebase/admin";
+  import { getUserInfo } from "$lib/api";
+  import { type User } from "$lib/server/firebase";
+  import { type UserInfo } from "$lib/server/firebase/admin";
   import { sessionData } from "$lib/state";
   import { onMount } from "svelte";
 
@@ -15,7 +16,7 @@
   sessionData.subscribe((data) => data.user);
   let userInfo: Promise<UserInfo> = $derived.by(async () => {
     if (user) {
-      return getUserInfo(user.user.uid);
+      return await getUserInfo(user.user.uid);
     } else {
       return {
         admins: [],
@@ -48,7 +49,17 @@
     event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement },
   ) {
     event.preventDefault();
-    user = await signIn(email, password);
+    fetch("/api/signin", {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    }).then((response) => {
+      response.json().then((body) => {
+        user = body;
+      });
+    });
   }
 </script>
 
