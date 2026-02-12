@@ -1,6 +1,6 @@
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { getFirebaseApp } from ".";
-import type { Event } from "$lib";
+import type { EventData } from "$lib";
 
 export type UserInfo = {
   admins: string[];
@@ -10,7 +10,7 @@ export type SaveResult = {
   error?: string;
 };
 
-export async function getUserInfo(uid: string) {
+export async function getUserInfo(uid: string): Promise<UserInfo> {
   getFirebaseApp();
   const firestore = getFirestore();
   const docReference = await getDoc(doc(firestore, "users", uid));
@@ -20,7 +20,7 @@ export async function getUserInfo(uid: string) {
 export async function saveEventData(
   org: string,
   event: string,
-  eventData: Event | undefined,
+  eventData: EventData | undefined,
 ): Promise<SaveResult> {
   if (eventData) {
     getFirebaseApp();

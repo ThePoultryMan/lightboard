@@ -1,16 +1,21 @@
 import { initializeApp, type FirebaseApp, type FirebaseOptions } from "firebase/app";
 
 import {
-  PUBLIC_API_KEY,
-  PUBLIC_APP_ID,
-  PUBLIC_AUTH_DOMAIN,
-  PUBLIC_MESSAGE_SENDER_ID,
-  PUBLIC_PROJECT_ID,
-  PUBLIC_STORAGE_BUCKET,
-} from "$env/static/public";
-import { getAuth as getFirebaseAuth, signInWithEmailAndPassword, type Auth, type UserCredential } from "firebase/auth";
+  PRIVATE_API_KEY,
+  PRIVATE_APP_ID,
+  PRIVATE_AUTH_DOMAIN,
+  PRIVATE_MESSAGE_SENDER_ID,
+  PRIVATE_PROJECT_ID,
+  PRIVATE_STORAGE_BUCKET,
+} from "$env/static/private";
+import {
+  getAuth as getFirebaseAuth,
+  signInWithEmailAndPassword,
+  type Auth,
+  type UserCredential,
+} from "firebase/auth";
 import { collection, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
-import { emptyEvent, type Event, type EventMetaData, type TeamData } from "$lib";
+import { emptyEvent, type EventData, type EventMetaData, type TeamData } from "$lib";
 import { sortByIndex } from "$lib/util";
 
 export interface User extends UserCredential {
@@ -18,16 +23,14 @@ export interface User extends UserCredential {
 }
 
 const firebaseConfig: FirebaseOptions = {
-  apiKey: PUBLIC_API_KEY,
-  authDomain: PUBLIC_AUTH_DOMAIN,
-  projectId: PUBLIC_PROJECT_ID,
-  storageBucket: PUBLIC_STORAGE_BUCKET,
-  messagingSenderId: PUBLIC_MESSAGE_SENDER_ID,
-  appId: PUBLIC_APP_ID,
+  apiKey: PRIVATE_API_KEY,
+  authDomain: PRIVATE_AUTH_DOMAIN,
+  projectId: PRIVATE_PROJECT_ID,
+  storageBucket: PRIVATE_STORAGE_BUCKET,
+  messagingSenderId: PRIVATE_MESSAGE_SENDER_ID,
+  appId: PRIVATE_APP_ID,
 };
 let firebaseApp: FirebaseApp | undefined;
-let auth: Auth;
-let user: User | undefined;
 
 export function getFirebaseApp() {
   if (!firebaseApp) {
@@ -47,7 +50,7 @@ export function getUser() {
   return getAuth().currentUser;
 }
 
-export async function getEventData(org: string, event: string) {
+export async function getEventData(org: string, event: string): Promise<EventData> {
   const firestore = getFirestore(getFirebaseApp());
   const collectionPath = `/orgs/${org}/${event}`;
 
@@ -67,14 +70,9 @@ export async function getEventData(org: string, event: string) {
   return eventData;
 }
 
-export async function signIn(email: string, password: string) {
-  if (!user) {
-    getFirebaseApp();
-    auth = getAuth();
+export async function signIn(email: string, password: string): Promise<User> {
+  getFirebaseApp();
+  const auth = getAuth();
 
-    user = (await signInWithEmailAndPassword(auth, email, password)) as User;
-    return user;
-  } else {
-    return user;
-  }
+  return (await signInWithEmailAndPassword(auth, email, password)) as User;
 }
