@@ -1,11 +1,13 @@
 <script lang="ts">
   import type { EventData, Participant } from "$lib";
-  import { getEventData } from "$lib/server/firebase";
+  // import { getEventData } from "$lib/server/firebase";
   import { sessionData, type EventCode } from "$lib/state.js";
   import { getSortableScores, getTeamScores } from "$lib/scoring/util";
   import { participantsIncludes } from "$lib/util";
   import type { PageProps } from "./$types";
   import PointBar from "$components/PointBar.svelte";
+  import { getEventData } from "$lib/api";
+  import { onMount } from "svelte";
 
   const { data }: PageProps = $props();
   let eventCode: EventCode | undefined = $state();
@@ -13,15 +15,9 @@
     eventCode = sessionData.eventCode;
   });
   let eventData: EventData | undefined = $state();
-  let promisedData = $derived.by(() => {
-    if (eventCode) {
-      return getEventData(eventCode.org, eventCode.event);
-    } else {
-      return getEventData("example", "example-event-1");
-    }
-  });
+  let promisedData: Promise<EventData> | undefined = $state();
   $effect(() => {
-    promisedData.then((value) => {
+    promisedData?.then((value) => {
       eventData = value;
     });
   });
@@ -99,6 +95,14 @@
   $effect(() => {
     eventCode = { org: data.org, event: data.event };
   });
+
+  onMount(() => {
+    if (eventCode) {
+      promisedData = getEventData(eventCode.org, eventCode.event);
+    } else {
+      promisedData = getEventData("example", "example-event-1");
+    }
+  });
 </script>
 
 {#if eventData}
@@ -171,6 +175,8 @@
       {/each}
     </ol>
   </div>
+{:else}
+  <p>loading...</p>
 {/if}
 
 <style>
