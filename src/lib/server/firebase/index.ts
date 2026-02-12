@@ -1,13 +1,13 @@
 import { initializeApp, type FirebaseApp, type FirebaseOptions } from "firebase/app";
 
 import {
-  PUBLIC_API_KEY,
-  PUBLIC_APP_ID,
-  PUBLIC_AUTH_DOMAIN,
-  PUBLIC_MESSAGE_SENDER_ID,
-  PUBLIC_PROJECT_ID,
-  PUBLIC_STORAGE_BUCKET,
-} from "$env/static/public";
+  PRIVATE_API_KEY,
+  PRIVATE_APP_ID,
+  PRIVATE_AUTH_DOMAIN,
+  PRIVATE_MESSAGE_SENDER_ID,
+  PRIVATE_PROJECT_ID,
+  PRIVATE_STORAGE_BUCKET,
+} from "$env/static/private";
 import {
   getAuth as getFirebaseAuth,
   signInWithEmailAndPassword,
@@ -23,12 +23,12 @@ export interface User extends UserCredential {
 }
 
 const firebaseConfig: FirebaseOptions = {
-  apiKey: PUBLIC_API_KEY,
-  authDomain: PUBLIC_AUTH_DOMAIN,
-  projectId: PUBLIC_PROJECT_ID,
-  storageBucket: PUBLIC_STORAGE_BUCKET,
-  messagingSenderId: PUBLIC_MESSAGE_SENDER_ID,
-  appId: PUBLIC_APP_ID,
+  apiKey: PRIVATE_API_KEY,
+  authDomain: PRIVATE_AUTH_DOMAIN,
+  projectId: PRIVATE_PROJECT_ID,
+  storageBucket: PRIVATE_STORAGE_BUCKET,
+  messagingSenderId: PRIVATE_MESSAGE_SENDER_ID,
+  appId: PRIVATE_APP_ID,
 };
 let firebaseApp: FirebaseApp | undefined;
 
