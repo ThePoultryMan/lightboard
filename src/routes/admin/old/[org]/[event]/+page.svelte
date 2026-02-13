@@ -12,10 +12,6 @@
   import { onMount } from "svelte";
   import { getEventData, getUserInfo, saveEventData } from "$lib/api";
 
-  const META_DATA_TAB: number = 0;
-  const SCORES_TAB: number = 1;
-  const TEAMS_TAB: number = 2;
-
   let {
     data,
   }: {
@@ -31,9 +27,6 @@
       user = await getUserInfo(data.user.user.uid);
     }
   });
-
-  let currentTab = $state(SCORES_TAB);
-
   let eventData: EventData | undefined = $state();
   let mergedParticipantNames = $derived.by(() => {
     if (eventData) {
@@ -167,8 +160,8 @@
       {/if}
 
       <p>
-        Click <a href={`/admin/old/${data.org}/${data.event}`} class="underline">here</a> to go to the
-        old interface.
+        Click <a href={`/admin/${data.org}/${data.event}`} class="underline">here</a> to go to the new
+        interface.
       </p>
 
       <div class="mb-5 flex items-center justify-between gap-5">
@@ -187,39 +180,16 @@
             </ul>
           </div>
         {/if}
-      </div>
-
-      <!--Buttons-->
-      <div class="mb-3 flex items-center justify-between">
-        <!--Tabs Buttons-->
-        <div>
-          <button
-            onclick={() => (currentTab = META_DATA_TAB)}
-            class={"rounded-lg px-3 py-1 transition-colors " +
-              (currentTab === META_DATA_TAB ? "bg-neutral-500" : "bg-neutral-700")}>Metadata</button
-          >
-          <button
-            onclick={() => (currentTab = SCORES_TAB)}
-            class={"rounded-lg px-3 py-1 transition-colors " +
-              (currentTab === SCORES_TAB ? "bg-neutral-500" : "bg-neutral-700")}>Scores</button
-          >
-          <button
-            onclick={() => (currentTab = TEAMS_TAB)}
-            class={"rounded-lg px-3 py-1 transition-colors " +
-              (currentTab === TEAMS_TAB ? "bg-neutral-500" : "bg-neutral-700")}>Teams</button
-          >
-        </div>
         <!--Save Button-->
         <button
-          class="rounded-lg bg-neutral-600 px-5 py-2 disabled:bg-neutral-800 disabled:text-slate-500"
+          class="rounded-lg bg-neutral-700 px-5 py-2 disabled:bg-neutral-800 disabled:text-slate-500"
           disabled={warnings.length >= 1}
           onclick={save}
         >
           Save
         </button>
       </div>
-
-      {#if currentTab === META_DATA_TAB}
+      <div class="flex items-start gap-3">
         <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">
           <h3 class="text-lg">Metadata</h3>
           <div>
@@ -291,7 +261,6 @@
             {/each}
           </div>
         </div>
-      {:else if currentTab === SCORES_TAB}
         <div class="basis-3/5 overflow-scroll rounded-lg bg-neutral-800 p-2">
           <h2 class="text-lg">Scores</h2>
           <div class="overflow-scroll">
@@ -388,7 +357,6 @@
             </table>
           </div>
         </div>
-      {:else if currentTab === TEAMS_TAB}
         <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">
           <h2 class="text-lg">Teams</h2>
           {#each eventData.teams as team}
@@ -422,7 +390,7 @@
             </OpenableCard>
           {/each}
         </div>
-      {/if}
+      </div>
     {/if}
   {:else}
     <p>This event does not exist, or you do not have permission to edit this event.</p>
