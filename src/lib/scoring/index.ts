@@ -1,14 +1,21 @@
-import type { TeamScore } from "$lib";
-
 export type Score = string | number | undefined;
 export type SortableScore = {
-  name: string,
-  score: Score,
-  scoreType: ScoreType,
-  bonusPoints: number,
-}
+  name: string;
+  score: Score;
+  scoreType: ScoreType;
+  bonusPoints: number;
+};
 export type ScoreType = "Time" | "Highest" | "Lowest";
 export const ScoreTypes = ["Time", "Highest", "Lowest"];
+
+export type SummedSectionScores = {
+  [team: string]: {
+    [section: string]: {
+      score: number;
+      bonusPoints: number;
+    };
+  };
+};
 
 export function compareScores(a: SortableScore, b: SortableScore) {
   switch (a.scoreType) {

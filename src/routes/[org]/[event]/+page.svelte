@@ -1,13 +1,18 @@
 <script lang="ts">
   import type { EventData, Participant } from "$lib";
-  // import { getEventData } from "$lib/server/firebase";
   import { sessionData, type EventCode } from "$lib/state.js";
-  import { getSortableScores, getTeamScores } from "$lib/scoring/util";
+  import {
+    getScoreStats,
+    getSortableScores,
+    getTeamScores,
+    type SummedSectionScoreStats,
+  } from "$lib/scoring/util";
   import { participantsIncludes } from "$lib/util";
   import type { PageProps } from "./$types";
-  import PointBar from "$components/PointBar.svelte";
   import { getEventData } from "$lib/api";
   import { onMount } from "svelte";
+  import Chart from "$components/Chart.svelte";
+  import type { SummedSectionScores } from "$lib/scoring";
 
   const { data }: PageProps = $props();
   let eventCode: EventCode | undefined = $state();
@@ -33,7 +38,8 @@
   });
   let division = $state(0);
   let section = $state(0);
-  let summedSectionScores = $derived.by(() => {
+  // this is a nightmare type, i need to rewrite it asap.
+  let summedSectionScores: SummedSectionScores = $derived.by(() => {
     if (!eventData?.metaData.sections || !eventData.metaData.divisions) return {};
     const summedSectionScores: any = {};
     eventData?.teams.forEach((team) => {
@@ -70,6 +76,17 @@
     });
     return summedSectionScores;
   });
+  const scoreStats: SummedSectionScoreStats = $derived.by(() => {
+    const stats = getScoreStats(summedSectionScores);
+
+    // add padding to the vertical range so the graphs look better.
+    stats.highest += 10;
+    if (stats.lowest - 10 >= 0) {
+      stats.lowest -= 10;
+    }
+
+    return stats;
+  });
   const teamPoints: Record<string, Number> = $derived.by(() => {
     if (summedSectionScores) {
       const result: Record<string, number> = {};
@@ -87,10 +104,19 @@
       return {};
     }
   });
-  let teamDisplay: HTMLElement | undefined = $state();
-  const isScrollable = $derived(
-    teamDisplay ? teamDisplay.scrollWidth > teamDisplay.clientWidth : false,
-  );
+  const graphData = $derived.by(() => {
+    const result: Record<string, number[]> = {};
+    if (summedSectionScores) {
+      for (const team of Object.keys(summedSectionScores)) {
+        result[team] = [];
+
+        for (const section of Object.keys(summedSectionScores[team])) {
+          result[team].push(summedSectionScores[team][section].score);
+        }
+      }
+    }
+    return result;
+  });
 
   $effect(() => {
     eventCode = { org: data.org, event: data.event };
@@ -125,26 +151,38 @@
         </div>
         <!--Section Display-->
         <div
-          class={"flex h-44 items-end gap-4 overflow-x-scroll rounded-lg border-1 border-red-500 p-2.5 pb-0 " +
-            (isScrollable ? "justify-normal" : "justify-between")}
+          class="position-relative h-50 w-full items-end gap-4 rounded-lg border-1 border-red-500 p-1"
+          style="--color-surface-content: 220 13% 68%;"
         >
-          {#each eventData.metaData.sections as section, index}
-            <!--We have to use this twice so we only bind the first display-->
-            {#if index === 0}
-              <PointBar
-                name={section.displayName}
-                points={summedSectionScores[team.meta.displayName][section.index].score}
-                bonusPoints={summedSectionScores[team.meta.displayName][section.index].bonusPoints}
-                bind:thisBind={teamDisplay}
-              />
-            {:else}
-              <PointBar
-                name={section.displayName}
-                points={summedSectionScores[team.meta.displayName][section.index].score}
-                bonusPoints={summedSectionScores[team.meta.displayName][section.index].bonusPoints}
-              />
-            {/if}
-          {/each}
+          <Chart
+            type="line"
+            data={{
+              labels: eventData.metaData.sections.map((section) => section.displayName),
+              datasets: [
+                {
+                  label: "Points",
+                  data: graphData[team.meta.displayName],
+                  backgroundColor: "rgba(255, 255, 255, 0.75)",
+                  borderColor: "rgba(255, 255, 255, 0.75)",
+                },
+              ],
+            }}
+            options={{
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false,
+                },
+              },
+              scales: {
+                y: {
+                  min: scoreStats.lowest,
+                  max: scoreStats.highest,
+                },
+              },
+            }}
+            fontColor="#000"
+          />
         </div>
       </div>
     {/each}
