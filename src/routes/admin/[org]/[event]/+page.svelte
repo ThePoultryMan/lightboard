@@ -276,29 +276,20 @@
           </div>
         {:else if currentTab === SECTIONS_TAB}
           <h3 class="mb-1 text-lg">Sections</h3>
-          <div>
+          <ol>
             <!--Sections-->
             {#each eventData.metaData.sections as section}
-              <EditableCard
-                bind:title={section.displayName}
-                titleName="Display Name"
-                titleEditable={true}
-                class="rounded-lg border border-slate-200 p-1 not-last:mb-2"
-              >
-                <div>
-                  <label for={"index" + section.index} class="p-1">Index: </label>
-                  <input
-                    type="number"
-                    pattern="[0-9]"
-                    id={"index" + section.index}
-                    class="editable-input"
-                    bind:value={section.index}
-                    readonly
-                  />
-                </div>
-              </EditableCard>
+              <!--TODO: make sections easily reorderable without scores becoming mixed up-->
+              <li class="not-last:mb-3">
+                <EditableCard
+                  bind:title={section.displayName}
+                  titleName="Display Name"
+                  titleEditable={true}
+                  class="rounded-lg border border-slate-200 p-1"
+                ></EditableCard>
+              </li>
             {/each}
-          </div>
+          </ol>
         {:else if currentTab === SCORES_TAB}
           <h2 class="text-lg">Scores</h2>
           <div class="overflow-scroll rounded-lg border" style:max-height={"606px"}>
