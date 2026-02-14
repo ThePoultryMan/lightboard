@@ -12,9 +12,10 @@
   import { onMount } from "svelte";
   import { getEventData, getUserInfo, saveEventData } from "$lib/api";
 
-  const META_DATA_TAB: number = 0;
-  const SCORES_TAB: number = 1;
-  const TEAMS_TAB: number = 2;
+  const DIVISIONS_TAB: number = 0;
+  const SECTIONS_TAB: number = 1;
+  const SCORES_TAB: number = 2;
+  const TEAMS_TAB: number = 3;
 
   let {
     data,
@@ -194,9 +195,15 @@
         <!--Tabs Buttons-->
         <div>
           <button
-            onclick={() => (currentTab = META_DATA_TAB)}
+            onclick={() => (currentTab = DIVISIONS_TAB)}
             class={"rounded-lg px-3 py-1 transition-colors " +
-              (currentTab === META_DATA_TAB ? "bg-neutral-500" : "bg-neutral-700")}>Metadata</button
+              (currentTab === DIVISIONS_TAB ? "bg-neutral-500" : "bg-neutral-700")}
+            >Divisions</button
+          >
+          <button
+            onclick={() => (currentTab = SECTIONS_TAB)}
+            class={"rounded-lg px-3 py-1 transition-colors " +
+              (currentTab === SECTIONS_TAB ? "bg-neutral-500" : "bg-neutral-700")}>Sections</button
           >
           <button
             onclick={() => (currentTab = SCORES_TAB)}
@@ -219,34 +226,11 @@
         </button>
       </div>
 
-      {#if currentTab === META_DATA_TAB}
+      {#if currentTab === DIVISIONS_TAB}
         <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">
-          <h3 class="text-lg">Metadata</h3>
+          <h3 class="mb-1 text-lg">Divisions</h3>
           <div>
-            <!--Sections-->
-            <h4 class="sticky top-0 mb-2">Sections</h4>
-            {#each eventData.metaData.sections as section}
-              <EditableCard
-                bind:title={section.displayName}
-                titleName="Display Name"
-                titleEditable={true}
-                class="rounded-lg border border-slate-200 p-1 not-last:mb-2"
-              >
-                <div>
-                  <label for={"index" + section.index} class="p-1">Index: </label>
-                  <input
-                    type="number"
-                    pattern="[0-9]"
-                    id={"index" + section.index}
-                    class="editable-input"
-                    bind:value={section.index}
-                    readonly
-                  />
-                </div>
-              </EditableCard>
-            {/each}
             <!--Divisions-->
-            <h4 class="sticky top-0 mb-2">Divisions</h4>
             {#each eventData.metaData.divisions as division}
               <EditableCard
                 title={division.displayName}
@@ -284,6 +268,33 @@
                     id={"scoreDecrease" + division.index}
                     class="editable-input"
                     bind:value={division.scoreDecrease}
+                    readonly
+                  />
+                </div>
+              </EditableCard>
+            {/each}
+          </div>
+        </div>
+      {:else if currentTab === SECTIONS_TAB}
+        <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">
+          <h3 class="mb-1 text-lg">Sections</h3>
+          <div>
+            <!--Sections-->
+            {#each eventData.metaData.sections as section}
+              <EditableCard
+                bind:title={section.displayName}
+                titleName="Display Name"
+                titleEditable={true}
+                class="rounded-lg border border-slate-200 p-1 not-last:mb-2"
+              >
+                <div>
+                  <label for={"index" + section.index} class="p-1">Index: </label>
+                  <input
+                    type="number"
+                    pattern="[0-9]"
+                    id={"index" + section.index}
+                    class="editable-input"
+                    bind:value={section.index}
                     readonly
                   />
                 </div>
