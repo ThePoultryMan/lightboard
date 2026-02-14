@@ -226,8 +226,8 @@
         </button>
       </div>
 
-      {#if currentTab === DIVISIONS_TAB}
-        <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">
+      <div class="rounded-lg bg-neutral-800 p-2">
+        {#if currentTab === DIVISIONS_TAB}
           <h3 class="mb-1 text-lg">Divisions</h3>
           <div>
             <!--Divisions-->
@@ -274,9 +274,7 @@
               </EditableCard>
             {/each}
           </div>
-        </div>
-      {:else if currentTab === SECTIONS_TAB}
-        <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">
+        {:else if currentTab === SECTIONS_TAB}
           <h3 class="mb-1 text-lg">Sections</h3>
           <div>
             <!--Sections-->
@@ -301,12 +299,10 @@
               </EditableCard>
             {/each}
           </div>
-        </div>
-      {:else if currentTab === SCORES_TAB}
-        <div class="basis-3/5 overflow-scroll rounded-lg bg-neutral-800 p-2">
+        {:else if currentTab === SCORES_TAB}
           <h2 class="text-lg">Scores</h2>
-          <div class="overflow-scroll">
-            <table class="w-full border">
+          <div class="overflow-scroll rounded-lg border" style:max-height={"606px"}>
+            <table class="w-full">
               <thead>
                 <tr>
                   <th class="w-40 p-1.5">Name</th>
@@ -398,9 +394,7 @@
               </tbody>
             </table>
           </div>
-        </div>
-      {:else if currentTab === TEAMS_TAB}
-        <div class="basis-1/5 rounded-lg bg-neutral-800 p-2">
+        {:else if currentTab === TEAMS_TAB}
           <h2 class="text-lg">Teams</h2>
           {#each eventData.teams as team}
             <OpenableCard class="rounded-lg border border-slate-200 not-last:mb-2">
@@ -432,8 +426,8 @@
               </EditableCard>
             </OpenableCard>
           {/each}
-        </div>
-      {/if}
+        {/if}
+      </div>
     {/if}
   {:else}
     <p>This event does not exist, or you do not have permission to edit this event.</p>
