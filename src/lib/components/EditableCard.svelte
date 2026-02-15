@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
   import { type Snippet } from "svelte";
   import AdminButton from "./AdminButton.svelte";
 
@@ -24,7 +23,7 @@
   let editableInputs: HTMLInputElement[] = $derived.by(() => {
     const ignored = update;
     const inputs: HTMLInputElement[] = [];
-    div?.querySelectorAll(":scope input").forEach((element) => {
+    div?.querySelectorAll(":scope > * > input, :scope > input").forEach((element) => {
       inputs.push(element as HTMLInputElement);
     });
     return inputs;
@@ -32,10 +31,18 @@
   let editableSelects: HTMLSelectElement[] = $derived.by(() => {
     const ignored = update;
     const selects: HTMLSelectElement[] = [];
-    div?.querySelectorAll(":scope select").forEach((element) => {
+    div?.querySelectorAll(":scope > * > select, :scope > select").forEach((element) => {
       selects.push(element as HTMLSelectElement);
     });
     return selects;
+  });
+  let editableButtons: HTMLButtonElement[] = $derived.by(() => {
+    const ignored = update;
+    const buttons: HTMLButtonElement[] = [];
+    div?.querySelectorAll(":scope > * > button:not(.always-editable), :scope > button:not(.always-editable)").forEach((element) => {
+      buttons.push(element as HTMLButtonElement);
+    });
+    return buttons;
   });
 
   $effect(() => {
@@ -48,6 +55,9 @@
       }
     });
     editableSelects.forEach((element) => {
+      element.disabled = readOnly;
+    });
+    editableButtons.forEach((element) => {
       element.disabled = readOnly;
     });
   });
@@ -74,6 +84,6 @@
   <AdminButton
     type={readOnly ? "edit" : "confirm"}
     onclick={() => (readOnly = !readOnly)}
-    class="absolute bottom-0 right-0"
+    class="always-editable absolute right-0 bottom-0"
   />
 </div>

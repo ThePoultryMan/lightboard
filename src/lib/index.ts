@@ -35,6 +35,7 @@ export type TeamData = {
 export type Participant = {
   name: string;
   scores: ScoreData[];
+  defaultDivision?: number;
 };
 
 export interface ScoreData {

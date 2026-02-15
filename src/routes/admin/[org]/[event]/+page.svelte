@@ -52,6 +52,12 @@
   let information: "saving" | "saving-failure" | "saved" | "peak-error" | undefined = $state();
   let saveError: string | undefined = $state();
   let newestScore: string | undefined = $state();
+  let confirmDeletePopUp:
+    | {
+        message: string;
+        onConfirm: () => void;
+      }
+    | undefined = $state();
   // TODO: Make warning system not god awful like it is now.
   let warnings: Warning[] = $derived.by(() => {
     const warnings: Warning[] = [];
@@ -129,6 +135,9 @@
     const defaultScoreType = eventData?.metaData.sections[section]?.defaultScoreType;
     if (defaultScoreType) {
       participant.scores[section].scoreType = defaultScoreType;
+    }
+    if (participant.defaultDivision) {
+      participant.scores[section].division = participant.defaultDivision;
     }
     newestScore = participant.name + section;
   }
@@ -417,29 +426,84 @@
                 titleName="Team Name"
                 update={team.participants.length}
               >
-                <div class="flex gap-3">
+                <div class="mb-1 flex gap-3">
                   <p>Members:</p>
                   <AdminButton
                     type="add"
                     onclick={() => team.participants.push({ name: "New Member", scores: [] })}
-                  ></AdminButton>
+                    class="always-editable"
+                  />
                 </div>
-                <ul class="list-dash ml-2 list-inside">
-                  {#each team.participants as participant}
-                    <li>
-                      <input
-                        type="text"
-                        class="editable-input"
-                        readonly
-                        bind:value={participant.name}
-                      />
-                    </li>
+                <div class="ml-2 grid grid-cols-[min-content_auto] gap-3 pr-3">
+                  {#each team.participants as participant, index}
+                    <p>-</p>
+                    <OpenableCard
+                      start-open={participant.name === "New Member"}
+                      class="rounded-lg border border-slate-200 p-1 last:mb-7"
+                    >
+                      <EditableCard
+                        bind:title={participant.name}
+                        titleEditable
+                        titleName="Member Name"
+                      >
+                        <div>
+                          <label for={`defaultDivisionFor${participant.name}`}>
+                            Default Division:
+                          </label>
+                          <select
+                            id={`defaultDivisionFor${participant.name}`}
+                            bind:value={participant.defaultDivision}
+                            disabled
+                          >
+                            {#each eventData.metaData.divisions as division}
+                              <option value={division.index}>{division.displayName}</option>
+                            {/each}
+                          </select>
+                        </div>
+                        <button
+                          onclick={() =>
+                            (confirmDeletePopUp = {
+                              message: "Are you sure that you want to delete this member?",
+                              onConfirm: () => team.participants.splice(index, 1),
+                            })}
+                          class="mt-2 rounded-md bg-red-900 px-1 py-0.5 disabled:bg-neutral-700 disabled:text-neutral-500"
+                          disabled
+                        >
+                          Delete Member
+                        </button>
+                      </EditableCard>
+                    </OpenableCard>
                   {/each}
-                </ul>
+                </div>
               </EditableCard>
             </OpenableCard>
           {/each}
         {/if}
+      </div>
+    {/if}
+
+    {#if confirmDeletePopUp}
+      <div
+        class="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-neutral-600/50"
+      >
+        <div class="absolute rounded-lg bg-gray-800 p-5 text-center">
+          <p class="mb-3 text-lg">{confirmDeletePopUp.message}</p>
+          <button
+            onclick={() => {
+              confirmDeletePopUp?.onConfirm();
+              confirmDeletePopUp = undefined;
+            }}
+            class="rounded-lg bg-neutral-700 px-3 py-1.5"
+          >
+            Delete
+          </button>
+          <button
+            onclick={() => (confirmDeletePopUp = undefined)}
+            class="rounded-lg border-2 border-neutral-700 px-3 py-1.5"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     {/if}
   {:else}
@@ -448,9 +512,3 @@
 {:else}
   <p>You are not logged in!</p>
 {/if}
-
-<style>
-  .list-dash {
-    list-style-type: "- ";
-  }
-</style>
