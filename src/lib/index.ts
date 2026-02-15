@@ -14,6 +14,7 @@ export type EventMetaData = {
 export type Section = {
   index: number;
   displayName: string;
+  defaultScoreType: ScoreType;
 };
 
 export type Division = {
@@ -42,13 +43,13 @@ export interface ScoreData {
   scoreType: ScoreType;
   score: Score;
   bonusPoints: number;
-};
+}
 
 export type TeamScore = {
   name: String;
   score: Score;
   adjustedScore: number;
-  bonusPoints: number,
+  bonusPoints: number;
 };
 
 export function emptyEvent() {

@@ -126,6 +126,10 @@
 
   function addNewScore(participant: Participant, section: number) {
     participant.scores[section] = ScoreData.empty(section);
+    const defaultScoreType = eventData?.metaData.sections[section]?.defaultScoreType;
+    if (defaultScoreType) {
+      participant.scores[section].scoreType = defaultScoreType;
+    }
     newestScore = participant.name + section;
   }
 </script>
@@ -286,7 +290,25 @@
                   titleName="Display Name"
                   titleEditable={true}
                   class="rounded-lg border border-slate-200 p-1"
-                ></EditableCard>
+                >
+                  <div>
+                    <label for={"defaultScoreType" + section.index} class="p-1"
+                      >Default Score Type:
+                    </label>
+                    <select
+                      id={"defaultScoreType" + section.index}
+                      class="editable-input"
+                      bind:value={section.defaultScoreType}
+                      disabled
+                    >
+                      {#each ScoreTypes as scoreType}
+                        <option>
+                          {scoreType}
+                        </option>
+                      {/each}
+                    </select>
+                  </div>
+                </EditableCard>
               </li>
             {/each}
           </ol>
