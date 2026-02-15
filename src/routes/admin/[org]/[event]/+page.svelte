@@ -26,7 +26,7 @@
     };
   } = $props();
 
-  let user: UserInfo = $state({ admins: [] });
+  let user: UserInfo | undefined = $state();
   sessionData.subscribe(async (data) => {
     if (data.user) {
       user = await getUserInfo(data.user.user.uid);
