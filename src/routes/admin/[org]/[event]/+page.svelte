@@ -397,6 +397,17 @@
                                     {/each}
                                   </select>
                                 </div>
+                                <button
+                                  onclick={() =>
+                                    (confirmDeletePopUp = {
+                                      message: "Are you sure that you want to delete this score?",
+                                      onConfirm: () => participant.scores.splice(index, 1),
+                                    })}
+                                  class="mt-2 rounded-md bg-red-900 px-1 py-0.5 disabled:bg-neutral-700 disabled:text-neutral-500"
+                                  disabled
+                                >
+                                  Delete Score
+                                </button>
                               </EditableCard>
                             </OpenableCard>
                           </td>
