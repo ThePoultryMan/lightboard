@@ -11,8 +11,8 @@ export const ScoreTypes = ["Time", "Highest", "Lowest"];
 export type SummedSectionScores = {
   [team: string]: {
     [section: string]: {
-      score: number;
-      bonusPoints: number;
+      score?: number;
+      bonusPoints?: number;
     };
   };
 };

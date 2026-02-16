@@ -41,7 +41,7 @@
   // this is a nightmare type, i need to rewrite it asap.
   let summedSectionScores: SummedSectionScores = $derived.by(() => {
     if (!eventData?.metaData.sections || !eventData.metaData.divisions) return {};
-    const summedSectionScores: any = {};
+    const summedSectionScores: SummedSectionScores = {};
     eventData?.teams.forEach((team) => {
       for (const section of eventData?.metaData.sections!) {
         if (team.participants) {
@@ -70,7 +70,7 @@
           summedSectionScores[team.meta.displayName][section.index].bonusPoints = bonusPoints;
         } else {
           summedSectionScores[team.meta.displayName] = {};
-          summedSectionScores[team.meta.displayName][section.index] = 0;
+          summedSectionScores[team.meta.displayName][section.index].score = 0;
         }
       }
     });
@@ -94,8 +94,12 @@
         let sum = 0;
         for (const section of Object.keys(summedSectionScores[team])) {
           sum +=
-            summedSectionScores[team][section].score +
-            summedSectionScores[team][section].bonusPoints;
+            (summedSectionScores[team][section].score
+              ? summedSectionScores[team][section].score
+              : 0) +
+            (summedSectionScores[team][section].bonusPoints
+              ? summedSectionScores[team][section].bonusPoints
+              : 0);
         }
         result[team] = sum;
       }
@@ -111,7 +115,9 @@
         result[team] = [];
 
         for (const section of Object.keys(summedSectionScores[team])) {
-          result[team].push(summedSectionScores[team][section].score);
+          result[team].push(
+            summedSectionScores[team][section].score ? summedSectionScores[team][section].score : 0,
+          );
         }
       }
     }

@@ -33,7 +33,7 @@
     }
   });
 
-  let currentTab = $state(SCORES_TAB);
+  let currentTab: number = $state(SCORES_TAB);
 
   let eventData: EventData | undefined = $state();
   let mergedParticipantNames = $derived.by(() => {
