@@ -14,7 +14,17 @@ import {
   type Auth,
   type UserCredential,
 } from "firebase/auth";
-import { collection, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  Firestore,
+  getDoc,
+  getDocs,
+  getFirestore,
+  Query,
+  query,
+  where,
+} from "firebase/firestore";
 import { emptyEvent, type EventData, type EventMetaData, type TeamData } from "$lib";
 import { sortByIndex } from "$lib/util";
 
@@ -48,6 +58,14 @@ function getAuth() {
 
 export function getUser() {
   return getAuth().currentUser;
+}
+
+export async function getEventDisplayName(org: string, event: string): Promise<string> {
+  const firestore = getFirestore(getFirebaseApp());
+  const collectionPath = `/orgs/${org}/${event}`;
+
+  const meta = (await getDoc(doc(firestore, collectionPath, "meta"))).data() as EventMetaData;
+  return meta.displayName ? meta.displayName : "";
 }
 
 export async function getEventData(org: string, event: string): Promise<EventData> {

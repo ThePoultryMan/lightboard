@@ -1,6 +1,6 @@
 <script lang="ts">
   import Link from "$components/Link.svelte";
-  import { getUserInfo } from "$lib/api";
+  import { getEventData, getEventDisplayName, getUserInfo } from "$lib/api";
   import { type User } from "$lib/server/firebase";
   import { type UserInfo } from "$lib/server/firebase/admin";
   import { sessionData } from "$lib/state";
@@ -69,9 +69,14 @@
   <div class="flex">
     {#await userInfo then adminInfo}
       {#each adminInfo.admins as fullEventPath}
-        <Link href={`/admin/${fullEventPath}`} class="not-last:mr-5">
-          <div class="rounded-md bg-neutral-800 p-2.5">{fullEventPath}</div>
-        </Link>
+        {#await getEventDisplayName(fullEventPath.split("/")[0], fullEventPath.split("/")[1]) then displayName}
+          <Link href={`/admin/${fullEventPath}`} class="not-last:mr-5">
+            <div class="rounded-md bg-neutral-800 p-2.5">
+              <h3 class="mb-1">{displayName}</h3>
+              <p class="text-slate-4 text-sm">{fullEventPath}</p>
+            </div>
+          </Link>
+        {/await}
       {/each}
     {/await}
   </div>

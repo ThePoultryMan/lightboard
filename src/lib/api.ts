@@ -27,3 +27,7 @@ export async function saveEventData(
 export async function getEventData(org: string, event: string): Promise<EventData> {
   return (await fetch(`/api/get-event-data/?org=${org}&event=${event}`)).json();
 }
+
+export async function getEventDisplayName(org: string, event: string): Promise<string> {
+  return (await fetch(`/api/get-event-display-name/?org=${org}&event=${event}`)).json();
+}
