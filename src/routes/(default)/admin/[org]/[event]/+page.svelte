@@ -244,12 +244,12 @@
           <h3 class="mb-1 text-lg">Divisions</h3>
           <div>
             <!--Divisions-->
-            {#each eventData.metaData.divisions as division}
+            {#each eventData.metaData.divisions as division, index}
               <EditableCard
                 title={division.displayName}
                 titleName="Display Name"
                 titleEditable={true}
-                class="rounded-lg border border-slate-200 p-1 not-last:mb-2"
+                class="mb-2 rounded-lg border border-slate-200 p-1"
               >
                 <div>
                   <label for={"divisionIndex" + division.index} class="p-1">Index: </label>
@@ -284,16 +284,44 @@
                     readonly
                   />
                 </div>
+                <button
+                  onclick={() =>
+                    (confirmDeletePopUp = {
+                      message: "Are you sure that you want to delete this division?",
+                      onConfirm: () => eventData?.metaData?.divisions.splice(index, 1),
+                    })}
+                  class="mt-2 rounded-md bg-red-900 px-1 py-0.5 disabled:bg-neutral-700 disabled:text-neutral-500"
+                  disabled
+                >
+                  Delete Division
+                </button>
               </EditableCard>
             {/each}
+            <AdminButton
+              type="add"
+              onclick={() => {
+                if (eventData?.metaData.divisions) {
+                  let lastDivisionIndex = eventData.metaData.divisions.at(
+                    eventData.metaData.divisions.length - 1,
+                  )?.index;
+                  lastDivisionIndex = lastDivisionIndex ? lastDivisionIndex : 0;
+                  eventData.metaData.divisions.push({
+                    displayName: `Division ${lastDivisionIndex}`,
+                    index: lastDivisionIndex + 1,
+                    scoreDecrease: 2,
+                    scoreStart: 40,
+                  });
+                }
+              }}
+            />
           </div>
         {:else if currentTab === SECTIONS_TAB}
           <h3 class="mb-1 text-lg">Sections</h3>
           <ol>
             <!--Sections-->
-            {#each eventData.metaData.sections as section}
+            {#each eventData.metaData.sections as section, index}
               <!--TODO: make sections easily reorderable without scores becoming mixed up-->
-              <li class="not-last:mb-3">
+              <li class="mb-2">
                 <EditableCard
                   bind:title={section.displayName}
                   titleName="Display Name"
@@ -317,10 +345,37 @@
                       {/each}
                     </select>
                   </div>
+                  <button
+                    onclick={() =>
+                      (confirmDeletePopUp = {
+                        message: "Are you sure that you want to delete this section?",
+                        onConfirm: () => eventData?.metaData?.sections.splice(index, 1),
+                      })}
+                    class="mt-2 rounded-md bg-red-900 px-1 py-0.5 disabled:bg-neutral-700 disabled:text-neutral-500"
+                    disabled
+                  >
+                    Delete Section
+                  </button>
                 </EditableCard>
               </li>
             {/each}
           </ol>
+          <AdminButton
+            type="add"
+            onclick={() => {
+              if (eventData?.metaData.sections) {
+                let lastSectionIndex = eventData.metaData.sections.at(
+                  eventData.metaData.sections.length - 1,
+                )?.index;
+                lastSectionIndex = lastSectionIndex ? lastSectionIndex : 0;
+                eventData.metaData.sections.push({
+                  displayName: `Section ${lastSectionIndex + 1}`,
+                  index: lastSectionIndex + 1,
+                  defaultScoreType: "Time",
+                });
+              }
+            }}
+          />
         {:else if currentTab === SCORES_TAB}
           <h2 class="text-lg">Scores</h2>
           <div class="overflow-scroll rounded-lg border" style:max-height={"606px"}>
@@ -428,8 +483,8 @@
             </table>
           </div>
         {:else if currentTab === TEAMS_TAB}
-          <h2 class="text-lg">Teams</h2>
-          {#each eventData.teams as team}
+          <h2 class="mb-1 text-lg">Teams</h2>
+          {#each eventData.teams as team, index}
             <OpenableCard class="rounded-lg border border-slate-200 not-last:mb-2">
               <EditableCard
                 bind:title={team.meta.displayName}
@@ -450,7 +505,7 @@
                     <p>-</p>
                     <OpenableCard
                       start-open={participant.name === "New Member"}
-                      class="rounded-lg border border-slate-200 p-1 last:mb-7"
+                      class="rounded-lg border border-slate-200 p-1 last:mb-3"
                     >
                       <EditableCard
                         bind:title={participant.name}
@@ -486,9 +541,37 @@
                     </OpenableCard>
                   {/each}
                 </div>
+                <button
+                  onclick={() =>
+                    (confirmDeletePopUp = {
+                      message:
+                        "Are you sure that you want to delete this team? ALL THIS TEAM'S MEMBERS AND SCORES WILL BE DELETED",
+                      onConfirm: () => eventData?.teams.splice(index, 1),
+                    })}
+                  class="mb-2 rounded-md bg-red-900 px-1 py-0.5 disabled:bg-neutral-700 disabled:text-neutral-500"
+                  disabled
+                >
+                  Delete Team
+                </button>
               </EditableCard>
             </OpenableCard>
           {/each}
+          <AdminButton
+            type="add"
+            onclick={() => {
+              if (eventData?.teams) {
+                let teamNumbers = eventData.teams.length;
+                teamNumbers = teamNumbers ? teamNumbers : 0;
+                eventData.teams.push({
+                  meta: {
+                    displayName: `Team #${teamNumbers + 1}`,
+                    id: `teamNumber${teamNumbers + 1}`,
+                  },
+                  participants: [],
+                });
+              }
+            }}
+          />
         {/if}
       </div>
     {/if}
