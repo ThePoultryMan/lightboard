@@ -56,10 +56,6 @@ function getAuth() {
   return getFirebaseAuth(firebaseApp);
 }
 
-export function getUser() {
-  return getAuth().currentUser;
-}
-
 export async function getEventDisplayName(org: string, event: string): Promise<string> {
   const firestore = getFirestore(getFirebaseApp());
   const collectionPath = `/orgs/${org}/${event}`;
