@@ -8,13 +8,13 @@
     type SummedSectionScoreStats,
   } from "$lib/scoring/util";
   import { participantsIncludes } from "$lib/util";
-  import type { PageProps } from "./$types";
   import { getEventData } from "$lib/api";
   import { onMount } from "svelte";
   import Chart from "$components/Chart.svelte";
   import type { SummedSectionScores } from "$lib/scoring";
 
-  const { data }: PageProps = $props();
+  const { data }: { data: { org?: string; event?: string } } = $props();
+
   let eventCode: EventCode | undefined = $state();
   sessionData.subscribe((sessionData) => {
     eventCode = sessionData.eventCode;
@@ -125,7 +125,9 @@
   });
 
   $effect(() => {
-    eventCode = { org: data.org, event: data.event };
+    if (data.org && data.event) {
+      eventCode = { org: data.org, event: data.event };
+    }
   });
 
   onMount(() => {
