@@ -143,6 +143,7 @@
   }
 </script>
 
+<!--TODO: add loading symbol until x seconds have progressed, then notify user that they are not logged in, and stop loading-->
 {#if user}
   {#if user.admins.includes(`${data.org}/${data.event}`)}
     {#if eventData}
