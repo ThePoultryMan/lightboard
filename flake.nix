@@ -3,53 +3,57 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
-    systems.url = "github:nix-systems/default";
+    flake-parts.url = "github:hercules-ci/flake-parts";
 
     bun2nix.url = "github:nix-community/bun2nix?tag=2.0.7";
     bun2nix.inputs.nixpkgs.follows = "nixpkgs";
-    bun2nix.inputs.systems.follows = "systems";
+
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    inputs:
-    let
-      # Read each system from the nix-systems input
-      eachSystem = inputs.nixpkgs.lib.genAttrs (import inputs.systems);
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "i686-linux"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ];
 
-      # Access the package set for a given system
-      pkgsFor = eachSystem (
-        system:
-        import inputs.nixpkgs {
-          inherit system;
-          # Use the bun2nix overlay, which puts `bun2nix` in pkgs
-          # You can, of course, still access
-          # inputs.bun2nix.packages.${system}.default instead
-          # and use that to build your package instead
-          overlays = [ inputs.bun2nix.overlays.default ];
-        }
-      );
-    in
-    {
-      packages = eachSystem (system: {
-        # Produce a package for this template with bun2nix in
-        # the overlay
-        default = pkgsFor.${system}.callPackage ./default.nix { };
-      });
+      perSystem =
+        {
+          config,
+          pkgs,
+          system,
+          ...
+        }:
+        {
+          _module.args.pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = [
+            ];
+          };
 
-      devShells = eachSystem (system: {
-        default = pkgsFor.${system}.mkShell {
-          packages = with pkgsFor.${system}; [
-            bun
+          packages = {
+            # Produce a package for this template with bun2nix in
+            # the overlay
+            default = pkgs.callPackage ./default.nix { };
+          };
 
-            # Add the bun2nix binary to our devshell
-            # Optional now that we have a binary on npm
-            bun2nix
-          ];
+          devShells.default = pkgs.mkShell {
+            packages = with pkgs; [
+              bun
+            ];
 
-          shellHook = ''
-            bun install --frozen-lockfile
-          '';
+            shellHook = ''
+              bun install --frozen-lockfile
+            '';
+          };
         };
-      });
     };
 }
