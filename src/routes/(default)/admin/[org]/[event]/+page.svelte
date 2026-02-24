@@ -345,6 +345,17 @@
                       {/each}
                     </select>
                   </div>
+                  <div>
+                    <label for={"sectionIndex" + section.index} class="p-1">Index: </label>
+                    <input
+                      type="number"
+                      pattern="[0-9]"
+                      id={"sectionIndex" + section.index}
+                      class="editable-input"
+                      bind:value={section.index}
+                      readonly
+                    />
+                  </div>
                   <button
                     onclick={() =>
                       (confirmDeletePopUp = {
