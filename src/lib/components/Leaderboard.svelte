@@ -109,15 +109,20 @@
     }
   });
   const graphData = $derived.by(() => {
-    const result: Record<string, number[]> = {};
+    const result: Record<string, (number | null)[]> = {};
     if (summedSectionScores) {
       for (const team of Object.keys(summedSectionScores)) {
         result[team] = [];
 
         for (const section of Object.keys(summedSectionScores[team])) {
-          result[team].push(
-            summedSectionScores[team][section].score ? summedSectionScores[team][section].score : 0,
-          );
+          const weekScore =
+            (summedSectionScores[team][section].score
+              ? summedSectionScores[team][section].score
+              : 0) +
+            (summedSectionScores[team][section].bonusPoints
+              ? summedSectionScores[team][section].bonusPoints
+              : 0);
+          result[team].push(weekScore ? weekScore : null);
         }
       }
     }
