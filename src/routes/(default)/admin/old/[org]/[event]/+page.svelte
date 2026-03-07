@@ -10,7 +10,8 @@
   import { ScoreTypes } from "$lib/scoring";
   import Icon from "@iconify/svelte";
   import { onMount } from "svelte";
-  import { getEventData, getUserInfo, saveEventData } from "$lib/api";
+  import { getEventData, getUserInfo } from "$lib/api";
+  import { saveEventData } from "$lib/firebase";
 
   let {
     data,
