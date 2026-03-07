@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { type Snippet } from "svelte";
+  import { onMount, type Snippet } from "svelte";
   import AdminButton from "./AdminButton.svelte";
 
   let {
@@ -39,9 +39,13 @@
   let editableButtons: HTMLButtonElement[] = $derived.by(() => {
     const ignored = update;
     const buttons: HTMLButtonElement[] = [];
-    div?.querySelectorAll(":scope > * > button:not(.always-editable), :scope > button:not(.always-editable)").forEach((element) => {
-      buttons.push(element as HTMLButtonElement);
-    });
+    div
+      ?.querySelectorAll(
+        ":scope > * > button:not(.always-editable), :scope > button:not(.always-editable)",
+      )
+      .forEach((element) => {
+        buttons.push(element as HTMLButtonElement);
+      });
     return buttons;
   });
 
@@ -64,20 +68,20 @@
 </script>
 
 <div class={"relative" + (className ? " " + className : "")} bind:this={div}>
-  {#if title}
-    <div>
-      {#if !readOnly && titleEditable}
-        <label for={"displayName" + title.replaceAll(" ", "")}>{titleName}: </label>
-      {/if}
+  <div>
+    {#if !readOnly && titleEditable}
+      <label for={"displayName" + title?.replaceAll(" ", "")}>{titleName}: </label>
+    {/if}
+    {#if titleEditable}
       <input
         type="text"
-        id={"displayName" + title.replaceAll(" ", "")}
+        id={"displayName" + title?.replaceAll(" ", "")}
         class="editable-input"
         readonly
         bind:value={title}
       />
-    </div>
-  {/if}
+    {/if}
+  </div>
   {#if children}
     {@render children()}
   {/if}
