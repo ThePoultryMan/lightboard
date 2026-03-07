@@ -9,6 +9,7 @@
     titleName,
     titleEditable = false,
     update = $bindable(),
+    "start-editable": startEditable = false,
   }: {
     children?: Snippet;
     class?: string;
@@ -16,10 +17,11 @@
     titleName?: string;
     titleEditable?: boolean;
     update?: any;
+    "start-editable"?: boolean,
   } = $props();
   let div: Element | undefined;
 
-  let readOnly = $state(true);
+  let readOnly = $state(!startEditable);
   let editableInputs: HTMLInputElement[] = $derived.by(() => {
     const ignored = update;
     const inputs: HTMLInputElement[] = [];

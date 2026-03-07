@@ -414,7 +414,7 @@
                               class="rounded-lg border border-slate-200 p-1.5"
                               start-open={newestScore === participant.name + index}
                             >
-                              <EditableCard>
+                              <EditableCard start-editable={newestScore === participant.name + index}>
                                 <div>
                                   <label for={"score" + participant.name + index}>Score: </label>
                                   <input
