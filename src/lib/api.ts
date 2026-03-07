@@ -1,7 +1,6 @@
 // helper functions for api access.
-
 import type { EventData } from "$lib";
-import type { SaveResult, UserInfo } from "./server/firebase/admin";
+import type { UserInfo } from "$lib/server/firebase/admin";
 
 export async function getUserInfo(uid: string): Promise<UserInfo> {
   return (await (
@@ -9,19 +8,6 @@ export async function getUserInfo(uid: string): Promise<UserInfo> {
       method: "GET",
     })
   ).json()) as UserInfo;
-}
-
-export async function saveEventData(
-  org: string,
-  event: string,
-  eventData: EventData | undefined,
-): Promise<SaveResult> {
-  return (
-    await fetch("/api/save-event-data", {
-      method: "PUT",
-      body: JSON.stringify({ org, event, eventData }),
-    })
-  ).json();
 }
 
 export async function getEventData(org: string, event: string): Promise<EventData> {

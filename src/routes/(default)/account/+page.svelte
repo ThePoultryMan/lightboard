@@ -1,6 +1,7 @@
 <script lang="ts">
   import Link from "$components/Link.svelte";
-  import { getEventData, getEventDisplayName, getUserInfo } from "$lib/api";
+  import { getEventDisplayName, getUserInfo } from "$lib/api";
+  import { signIn } from "$lib/firebase";
   import { type User } from "$lib/server/firebase";
   import { type UserInfo } from "$lib/server/firebase/admin";
   import { sessionData } from "$lib/state";
@@ -49,17 +50,7 @@
     event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement },
   ) {
     event.preventDefault();
-    fetch("/api/signin", {
-      method: "POST",
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    }).then((response) => {
-      response.json().then((body) => {
-        user = body;
-      });
-    });
+    user = await signIn(email, password);
   }
 </script>
 
