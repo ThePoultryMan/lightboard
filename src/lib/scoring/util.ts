@@ -62,6 +62,7 @@ export function getScoreStats(scores: SummedSectionScores): SummedSectionScoreSt
   for (const team of Object.keys(scores)) {
     for (const section of Object.keys(scores[team])) {
       const score = scores[team][section].score;
+      if (!score) continue;
       if (score > highest) {
         highest = score;
       }
