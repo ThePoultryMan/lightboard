@@ -127,12 +127,19 @@
     }
   }
 
+  $inspect(eventData);
+
   function dismiss() {
     information = undefined;
   }
 
   function addNewScore(participant: Participant, section: number) {
-    participant.scores[section] = ScoreData.empty(section);
+    // add empty scores before this score if needed
+    for (let i = 0; i <= section; i++) {
+      if (!participant.scores[i]) {
+        participant.scores[i] = i === section ? ScoreData.empty(section) : ({} as ScoreData);
+      }
+    }
     const defaultScoreType = eventData?.metaData.sections[section]?.defaultScoreType;
     if (defaultScoreType) {
       participant.scores[section].scoreType = defaultScoreType;
@@ -407,14 +414,16 @@
                     <tr class="odd:bg-neutral-900">
                       <td class="p-1.5">{participant.name}</td>
                       {#each eventData.metaData.sections as section, index}
-                        {#if participant.scores[index]}
+                        {#if participant.scores[index] && Object.keys(participant.scores[index]).length !== 0}
                           <td class="p-1.5">
                             <OpenableCard
                               min-height="1.5rem"
                               class="rounded-lg border border-slate-200 p-1.5"
                               start-open={newestScore === participant.name + index}
                             >
-                              <EditableCard start-editable={newestScore === participant.name + index}>
+                              <EditableCard
+                                start-editable={newestScore === participant.name + index}
+                              >
                                 <div>
                                   <label for={"score" + participant.name + index}>Score: </label>
                                   <input
@@ -469,7 +478,8 @@
                                   onclick={() =>
                                     (confirmDeletePopUp = {
                                       message: "Are you sure that you want to delete this score?",
-                                      onConfirm: () => participant.scores.splice(index, 1),
+                                      onConfirm: () =>
+                                        participant.scores.splice(index, 1, {} as ScoreData),
                                     })}
                                   class="mt-2 rounded-md bg-red-900 px-1 py-0.5 disabled:bg-neutral-700 disabled:text-neutral-500"
                                   disabled

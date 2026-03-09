@@ -71,7 +71,7 @@ export namespace ScoreData {
       section,
       division: 0,
       scoreType: "Time",
-      score: undefined,
+      score: 0,
       bonusPoints: 0,
     };
   }

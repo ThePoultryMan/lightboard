@@ -1,4 +1,4 @@
-export type Score = string | number | undefined;
+export type Score = string | number;
 export type SortableScore = {
   name: string;
   score: Score;
