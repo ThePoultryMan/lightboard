@@ -35,6 +35,7 @@ export function getSortableScores(
       (participant) =>
         participant.scores &&
         participant.scores[section] &&
+        participant.scores[section].score !== undefined &&
         participant.scores[section].division === division.index,
     )
     .forEach((participant, index) => {
